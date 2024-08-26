@@ -1,6 +1,6 @@
 Hello ${NAME},
 
-Thank you for attending our Python workshop, attached to this email is your certificate.
+Thank you for attending our example workshop, attached to this email is your certificate.
 
 Best regards,
 

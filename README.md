@@ -1,10 +1,10 @@
 # Quick and reliable ✉️➡️
 
-E-neiler makes it easy to quickly send high amounts of emails through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that supports SMTP.
+E-neiler makes it easy to quickly send high amounts of emails through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that supports SMTP. Both plain text and HTML emails are supported.
 
 ## Requirements 📋
 
-- Python 3.0.0+
+- Python 3.8.0+
 
 ## Usage 🚀
 
@@ -22,7 +22,7 @@ E-neiler makes it easy to quickly send high amounts of emails through SMTP, file
 
 - Create a `.env` file based on the provided `.env.example` file, with attention to the notes on each variable
 
-- Edit the `template.txt` file in the `data` folder to contain the appropriate email content
+- Edit the `template.txt` file in the `data` folder to contain the appropriate email content or even change it to a `.html` file
 
 - Edit the `details.csv` file in the `data` folder to contain the appropriate recipient emails, placeholder replacements and file attatchment paths, depending on what is needed
 
@@ -32,8 +32,11 @@ E-neiler makes it easy to quickly send high amounts of emails through SMTP, file
   #-------------CONFIGURATION-------------#
 
   message["To"] = row[0]
+
+  # Most clients will ignore this and set it as the sender address automatically
   message["From"] = "NEIAAC"
-  message["Subject"] = "Your NEIAAC Python workshop certificate!"
+
+  message["Subject"] = "Your NEIAAC example workshop certificate!"
 
   # CC and BCC are optional
   message["Cc"] = prepare_copy([""])
