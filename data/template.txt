@@ -1,0 +1,7 @@
+Hello ${NAME},
+
+Thank you for attending our Python workshop, attached to this email is your certificate.
+
+Best regards,
+
+NEI/AAC
