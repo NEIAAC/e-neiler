@@ -1,4 +1,4 @@
-# TODO
+# Quick and reliable ✉️➡️
 
 E-neiler makes it easy to quickly send high amounts of emails through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that supports SMTP.
 
