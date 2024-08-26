@@ -51,7 +51,7 @@ def main():
 
     logging.info("Process started")
 
-    # Load environment variables (.env file is ignored if they already exist)
+    # Load environment variables
     dotenv.load_dotenv(dotenv.find_dotenv())
 
     smtp_host = get_env("SMTP_HOST")
