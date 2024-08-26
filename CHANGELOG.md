@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/NEIAAC/e-neiler/compare/v0.1.0...v1.0.0) (2024-08-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* add support for HTML ([#3](https://github.com/NEIAAC/e-neiler/issues/3))
+
+### Features
+
+* add support for HTML ([#3](https://github.com/NEIAAC/e-neiler/issues/3)) ([aead1e7](https://github.com/NEIAAC/e-neiler/commit/aead1e7ccd29a6c99fcdabb027099b0352072e96))
+
 ## 0.1.0 (2024-08-26)
 
 
