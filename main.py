@@ -3,10 +3,10 @@ import logging
 import csv
 import smtplib
 import dotenv
+import mimetypes
+import html2text
 from string import Template
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
+from email.message import EmailMessage
 
 def get_env(var_name: str) -> str:
     value = os.getenv(var_name)
@@ -17,25 +17,36 @@ def get_env(var_name: str) -> str:
 
 def read_template(template_path: str) -> Template:
     with open(template_path, "r", encoding="utf-8") as template_file:
-        template_file_content = template_file.read()
-    return Template(template_file_content)
+        content = template_file.read()
+    return Template(content)
 
 def read_csv(csv_path: str) -> list[list[str]]:
-    with open(csv_path, "r") as csv_file:
+    with open(csv_path, "r", encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         # Skip the first row (contains headers)
         next(csv_reader)
-        return list(csv_reader)
+        content = list(csv_reader)
+        return content
 
 def prepare_copy(emails: list[str]) -> list[str]:
     # Different clients may use different delimiters, change ", " to other delimiters if needed
     return ", ".join(emails)
 
-def prepare_file(file_path: str) -> MIMEApplication:
+def strip_html(content: str) -> str:
+    content = html2text.html2text(content)
+    return content
+
+def read_attachment(file_path: str) -> tuple[bytes, str, str]:
+    mime_type, _ = mimetypes.guess_type(file_path)
+
+    if mime_type is None:
+        mime_type = "application/octet-stream"
+    main_type, sub_type = mime_type.split("/")
+
     with open(file_path, "rb") as file:
-        attachment = MIMEApplication(file.read(), Name=os.path.basename(file_path))
-        attachment["Content-Disposition"] = f"attachment; filename={os.path.basename(file_path)}"
-        return attachment
+        content = file.read()
+
+    return content, main_type, sub_type
 
 
 def main():
@@ -75,7 +86,7 @@ def main():
         exit(1)
 
     try:
-        message_template = read_template(template_path)
+        template = read_template(template_path)
         logging.info("Template loaded")
     except Exception as e:
         logging.error(f"Failed to load template: {e}")
@@ -83,32 +94,35 @@ def main():
 
     try:
         csv = read_csv(csv_path)
-        logging.info("CSV loaded")
+        logging.info(f"CSV loaded, found {len(csv)} {len(csv) == 1 and 'row' or 'rows'}")
     except Exception as e:
         logging.error(f"Failed to load CSV: {e}")
         exit(1)
-
-    logging.info("Sending emails")
 
     total: int = 0
     successful: int = 0
     for row in csv:
         total += 1
-        message = MIMEMultipart()
 
+        logging.info(f"[{total}]")
+
+        message = EmailMessage()
 
         #----------------------------CONFIGURATION----------------------------#
 
         message["To"] = row[0]
+
+        # Most clients will ignore this and set it as the sender address automatically
         message["From"] = "NEIAAC"
-        message["Subject"] = "Your NEIAAC Python workshop certificate!"
+
+        message["Subject"] = "Your NEIAAC example workshop certificate!"
 
         # CC and BCC are optional
         message["Cc"] = prepare_copy([""])
         message ["Bcc"] = prepare_copy(["sample@example.com", "fake@example.com"])
 
         # Replace template placeholders with values from the CSV
-        body = message_template.substitute(
+        body = template.substitute(
             NAME=row[1]
         )
 
@@ -118,16 +132,21 @@ def main():
 
         #---------------------------------------------------------------------#
 
+        # Add alternative plain text version when using html, for backwards compatibility
+        if (template_path.endswith(".html")):
+            message.set_content(strip_html(body))
+            message.add_alternative(body, subtype="html")
+        else:
+            message.set_content(body)
 
-        message.attach(MIMEText(body, "plain"))
         # Skipped if file list is empty
-        for file_path in file_paths:
-            try:
-                file = prepare_file(file_path)
-                message.attach(file)
-            except Exception as e:
-                logging.error(f"Failed to attach file {file_path} in email to {row[0]}, this email will be skipped: {e}")
-                continue
+        try:
+            for file_path in file_paths:
+                file, main_type, sub_type = read_attachment(file_path)
+                message.add_attachment(file, maintype=main_type, subtype=sub_type, filename=os.path.basename(file_path))
+        except Exception as e:
+            logging.error(f"Failed to attach file in email to {row[0]}: {e}")
+            continue
 
         try:
             server.send_message(message)

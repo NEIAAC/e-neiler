@@ -1,5 +1,5 @@
 EMAI,NAME,FILE
-bob@example.com,John,data/files/certificate.pdf
-alice@example.com,Mary,data/files/invoice.pdf
-robert@example.com,Jessica,data/files/certificate.pdf
-carl@example.com,Chrystal,data/files/invoice.pdf
+bob@example.com,Bob,data/files/certificate.pdf
+alice@example.com,Alice,data/files/invoice.pdf
+robert@example.com,Robert,data/files/certificate.pdf
+carl@example.com,Carl,data/files/invoice.pdf
