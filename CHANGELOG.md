@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/NEIAAC/e-neiler/compare/v1.0.0...v1.0.1) (2024-08-27)
+
+
+### Documentation
+
+* fix clone url ([e4d0494](https://github.com/NEIAAC/e-neiler/commit/e4d049484e70c21efab1e868142272d8139ddb46))
+
 ## [1.0.0](https://github.com/NEIAAC/e-neiler/compare/v0.1.0...v1.0.0) (2024-08-26)
 
 
