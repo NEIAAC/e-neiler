@@ -11,7 +11,7 @@ E-neiler makes it easy to quickly send high amounts of emails through SMTP, file
 - Clone the repository:
 
   ```shell
-  git clone https://github.com/NEIAAC/landing-page.git
+  git clone https://github.com/NEIAAC/e-neiler.git
   ```
 
 - Install the dependencies:
