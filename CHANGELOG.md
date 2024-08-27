@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/NEIAAC/e-neiler/compare/v1.0.1...v1.0.2) (2024-08-27)
+
+
+### Documentation
+
+* fix punctuation ([5ed247b](https://github.com/NEIAAC/e-neiler/commit/5ed247b34db22a81476a761a2b45646a31164799))
+
 ## [1.0.1](https://github.com/NEIAAC/e-neiler/compare/v1.0.0...v1.0.1) (2024-08-27)
 
 
