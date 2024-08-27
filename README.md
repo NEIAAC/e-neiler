@@ -20,11 +20,11 @@ E-neiler makes it easy to quickly send high amounts of emails through SMTP, file
   pip install -r requirements.txt
   ```
 
-- Create a `.env` file based on the provided `.env.example` file, with attention to the notes on each variable
+- Create a `.env` file based on the provided `.env.example` file, with attention to the notes on each variable.
 
-- Edit the `template.txt` file in the `data` folder to contain the appropriate email content or even change it to a `.html` file
+- Edit the `template.txt` file in the `data` folder to contain the appropriate email content or even change it to a `.html` file.
 
-- Edit the `details.csv` file in the `data` folder to contain the appropriate recipient emails, placeholder replacements and file attatchment paths, depending on what is needed
+- Edit the `details.csv` file in the `data` folder to contain the appropriate recipient emails, placeholder replacements and file attatchment paths, depending on what is needed.
 
 - Map placeholders and files to the values that will be read from the CSV in this section of the `main.py` file:
 
