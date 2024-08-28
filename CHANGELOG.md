@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/NEIAAC/e-neiler/compare/v1.0.2...v2.0.0) (2024-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* add xlsx support
+
+### Features
+
+* add xlsx support ([7070d61](https://github.com/NEIAAC/e-neiler/commit/7070d611d470dfc57d639927f6032b0593f0cc09))
+
 ## [1.0.2](https://github.com/NEIAAC/e-neiler/compare/v1.0.1...v1.0.2) (2024-08-27)
 
 
