@@ -1,9 +1,9 @@
 import os
 import logging
-import csv
 import smtplib
 import dotenv
 import mimetypes
+import pandas as pd
 import html2text
 from string import Template
 from email.message import EmailMessage
@@ -20,13 +20,15 @@ def read_template(template_path: str) -> Template:
         content = template_file.read()
     return Template(content)
 
-def read_csv(csv_path: str) -> list[list[str]]:
-    with open(csv_path, "r", encoding="utf-8") as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=",")
-        # Skip the first row (contains headers)
-        next(csv_reader)
-        content = list(csv_reader)
-        return content
+def read_table(table_path: str) -> list[list[str]]:
+    if table_path.endswith(".csv"):
+        table = pd.read_csv(table_path, index_col=False)
+    elif table_path.endswith(".xlsx"):
+        table = pd.read_excel(table_path, index_col=False)
+    else:
+        logging.critical("Table data file type extension not supported")
+        exit(1)
+    return table.values.tolist()
 
 def prepare_copy(emails: list[str]) -> list[str]:
     # Different clients may use different delimiters, change ", " to other delimiters if needed
@@ -70,7 +72,7 @@ def main():
     smtp_username = get_env("SMTP_USERNAME")
     smtp_password = get_env("SMTP_PASSWORD")
     template_path = get_env("TEMPLATE_PATH")
-    csv_path = get_env("CSV_PATH")
+    table_path = get_env("TABLE_PATH")
 
     logging.info("Environment variables loaded")
     logging.info(f"Logging in as {smtp_username} on {smtp_host}:{smtp_port}")
@@ -82,26 +84,26 @@ def main():
         server.login(smtp_username, smtp_password)
         logging.info("Successfully logged in")
     except Exception as e:
-        logging.error(f"Failed to login: {e}")
+        logging.critical(f"Failed to login: {e}")
         exit(1)
 
     try:
         template = read_template(template_path)
         logging.info("Template loaded")
     except Exception as e:
-        logging.error(f"Failed to load template: {e}")
+        logging.critical(f"Failed to load template: {e}")
         exit(1)
 
     try:
-        csv = read_csv(csv_path)
-        logging.info(f"CSV loaded, found {len(csv)} {len(csv) == 1 and 'row' or 'rows'}")
+        table = read_table(table_path)
+        logging.info(f"CSV loaded, found {len(table)} {len(table) == 1 and 'row' or 'rows'}")
     except Exception as e:
-        logging.error(f"Failed to load CSV: {e}")
+        logging.critical(f"Failed to load CSV: {e}")
         exit(1)
 
     total: int = 0
     successful: int = 0
-    for row in csv:
+    for row in table:
         total += 1
 
         logging.info(f"[{total}]")

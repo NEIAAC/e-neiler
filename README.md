@@ -1,10 +1,10 @@
 # Quick and reliable ✉️➡️
 
-E-neiler makes it easy to quickly send high amounts of emails through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that supports SMTP. Both plain text and HTML emails are supported.
+E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
 
 ## Requirements 📋
 
-- Python 3.8.0+
+- Python 3.10.0+
 
 ## Usage 🚀
 
