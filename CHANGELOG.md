@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.1.0](https://github.com/NEIAAC/e-neiler/compare/v2.0.0...v2.1.0) (2024-08-29)
+
+
+### Features
+
+* add more log output ([942c869](https://github.com/NEIAAC/e-neiler/commit/942c869e0ad7deb22af0885975addee1ae62a833))
+
+
+### Bug Fixes
+
+* move example files to correct folders ([3033e4f](https://github.com/NEIAAC/e-neiler/commit/3033e4ff947fbd62a4dfb7620cf89b56940fa0d2))
+
+
+### Documentation
+
+* fix typo ([c47a4b6](https://github.com/NEIAAC/e-neiler/commit/c47a4b63004907562a6401a19edcda80d5009dbb))
+
 ## [2.0.0](https://github.com/NEIAAC/e-neiler/compare/v1.0.2...v2.0.0) (2024-08-28)
 
 
