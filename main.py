@@ -80,6 +80,7 @@ def main():
     server = smtplib.SMTP(host=smtp_host, port=smtp_port)
 
     try:
+        # Attemp to use TLS encryption with the server (remove if causing issues)
         server.starttls()
         server.login(smtp_username, smtp_password)
         logging.info("Successfully logged in")
@@ -89,24 +90,22 @@ def main():
 
     try:
         template = read_template(template_path)
-        logging.info("Template loaded")
+        logging.info("Body template loaded")
     except Exception as e:
-        logging.critical(f"Failed to load template: {e}")
+        logging.critical(f"Failed to load body template: {e}")
         exit(1)
 
     try:
         table = read_table(table_path)
-        logging.info(f"CSV loaded, found {len(table)} {len(table) == 1 and 'row' or 'rows'}")
+        logging.info(f"Table loaded, found {len(table)} {len(table) == 1 and 'row' or 'rows'}")
     except Exception as e:
-        logging.critical(f"Failed to load CSV: {e}")
+        logging.critical(f"Failed to load table: {e}")
         exit(1)
 
     total: int = 0
     successful: int = 0
     for row in table:
         total += 1
-
-        logging.info(f"[{total}]")
 
         message = EmailMessage()
 
@@ -123,7 +122,7 @@ def main():
         message["Cc"] = prepare_copy([""])
         message ["Bcc"] = prepare_copy(["sample@example.com", "fake@example.com"])
 
-        # Replace template placeholders with values from the CSV
+        # Replace template placeholders with values from the table
         body = template.substitute(
             NAME=row[1]
         )
@@ -147,15 +146,15 @@ def main():
                 file, main_type, sub_type = read_attachment(file_path)
                 message.add_attachment(file, maintype=main_type, subtype=sub_type, filename=os.path.basename(file_path))
         except Exception as e:
-            logging.error(f"Failed to attach file in email to {row[0]}: {e}")
+            logging.error(f"[{total}] Failed to attach file in email to {row[0]}: {e}")
             continue
 
         try:
             server.send_message(message)
             successful += 1
-            logging.info(f"Email sent to {row[0]} successfully")
+            logging.info(f"[{total}] Sent email to {row[0]}")
         except Exception as e:
-            logging.error(f"Failed to send email to {row[0]}: {e}")
+            logging.error(f"[{total}] Failed to send email to {row[0]}: {e}")
 
     logging.info(f"Successfully sent {successful} out of {total} emails")
 
