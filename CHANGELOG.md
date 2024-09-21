@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/NEIAAC/e-neiler/compare/v2.1.0...v2.1.1) (2024-09-21)
+
+
+### Documentation
+
+* update env example ([16b2f93](https://github.com/NEIAAC/e-neiler/commit/16b2f93cd8f4d21c6379df30787e07cfc8f9f9d9))
+
 ## [2.1.0](https://github.com/NEIAAC/e-neiler/compare/v2.0.0...v2.1.0) (2024-08-29)
 
 
