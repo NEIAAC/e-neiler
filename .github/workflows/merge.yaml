@@ -2,7 +2,7 @@ name: merge
 
 on:
   pull_request_target:
-    types: [opened, reopened, edited, synchronize]
+    types: [opened, reopened, edited]
 
 jobs:
   # Check if the PR has a title that matches the conventional commit format
@@ -15,4 +15,8 @@ jobs:
           node-version: lts/*
       - name: Install commitlint and config-conventional
         run: npm install @commitlint/cli @commitlint/config-conventional
-      - run: echo "${{ github.event.pull_request.title }}" | npx commitlint
+      - name: Setup commitlint config
+        run: |
+          echo 'extends: ["@commitlint/config-conventional"]' > .commitlintrc.yaml
+      - name: Validate PR title
+        run: echo "${{ github.event.pull_request.title }}" | npx commitlint
