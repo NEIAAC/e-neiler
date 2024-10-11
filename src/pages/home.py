@@ -1,13 +1,11 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QFileDialog, QSizePolicy
-
-from qfluentwidgets import LineEdit, PasswordLineEdit, FlowLayout, TextBrowser, PushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QFileDialog
+from qfluentwidgets import LineEdit, PasswordLineEdit, TextBrowser, PushButton
 
 class HomePage(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("Home")
         layout = QVBoxLayout()
-        ## add two inputs for smtp username and password
 
         smtpHostInput = LineEdit()
         hostLabel = QLabel("SMTP Host:")

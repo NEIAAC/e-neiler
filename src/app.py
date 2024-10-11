@@ -1,17 +1,18 @@
+import logging
+import os
+
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QStandardPaths
 from PySide6.QtGui import QIcon, QPixmap
 
-import logging
+from utils.logger import suppressor
+with suppressor():
+    from qfluentwidgets import QConfig, qconfig
 
 from version import __version__
-from utils import path
-from utils import logger
+from utils import path, logger, config
 
 LOGO_PATH = "resources/icons/logo.png"
-
-THEME_KEY = "app/style"
-LOCALE_KEY = "app/locale"
 
 class App(QApplication):
     def __init__(self, argv: list[str]):
@@ -22,6 +23,7 @@ class App(QApplication):
         self.setOrganizationDomain("neiaac.com")
         self.setApplicationVersion(__version__)
         self.setLogger(logger.setup)
+        self.setConfig(config.customizable)
         self.setWindowIcon(QIcon(QPixmap(path.fromBase(LOGO_PATH))))
         self.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 
@@ -32,7 +34,6 @@ class App(QApplication):
         """
         setup()
 
-        # Add any other information you want to log as an item in the list
         data = [
             self.applicationName(),
             "",
@@ -50,3 +51,12 @@ class App(QApplication):
             logging.info(f"|{' ' * padding}{line}{' ' * (length - len(line) + padding)}|")
         logging.info(column)
         logging.info(row)
+
+    def setConfig(self, config: QConfig):
+        file = os.path.join(QStandardPaths.writableLocation(QStandardPaths.StandardLocation.AppDataLocation), "config.json")
+        if os.path.exists(file):
+            logging.info(f"Config file found")
+        else:
+            logging.info(f"Config file not found, using defaults")
+        qconfig.load(file, config)
+        logging.info(f"Config initialized")

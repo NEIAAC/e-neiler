@@ -2,6 +2,7 @@ import datetime
 import sys, os, logging, logging.handlers
 import traceback
 from contextlib import contextmanager
+
 from PySide6.QtCore import QStandardPaths
 
 class Formatter(logging.Formatter):

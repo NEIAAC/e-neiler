@@ -7,10 +7,9 @@
 #    nuitka-project: --macos-create-app-bundle
 
 import sys
+
 from app import App
-from utils.logger import suppressor
-with suppressor():
-    from window import Window
+from window import Window
 
 if __name__ == "__main__":
     app = App(sys.argv)
