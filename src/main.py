@@ -7,11 +7,8 @@
 #    nuitka-project: --macos-create-app-bundle
 
 import sys
-
 from app import App
-
-from utils.logging import suppressor
-
+from utils.logger import suppressor
 with suppressor():
     from window import Window
 
