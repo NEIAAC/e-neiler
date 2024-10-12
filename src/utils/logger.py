@@ -26,21 +26,29 @@ def setup():
 
     formatter = Formatter(syntax)
 
-    def filename(): return "{:%Y-%m-%d}.log".format(datetime.datetime.now(tz=datetime.timezone.utc).date())
-    file = logging.handlers.TimedRotatingFileHandler(os.path.join(path, filename()), backupCount=30, when="midnight", utc=True)
-    file.namer = lambda _: filename()
+    def namer(name: str):
+        dir, file = os.path.split(name)
+        _, timestamp = file.rsplit(".", 1)
+        return os.path.join(dir, f"{timestamp}.log")
+
+    file = logging.handlers.TimedRotatingFileHandler(
+        os.path.join(path, "{:%Y-%m-%d}.log".format(datetime.datetime.now(tz=datetime.timezone.utc).date())),
+        backupCount=30,
+        when="midnight",
+        delay=True,
+        utc=True)
     file.setFormatter(formatter)
+    file.namer = namer
+
+    console = logging.StreamHandler()
+    console.setFormatter(formatter)
 
     dev = "__compiled__" not in globals()
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG if dev else logging.INFO)
-    logger.addHandler(file)
-
-    if dev:
-        console = logging.StreamHandler()
-        console.setFormatter(formatter)
-        logger.addHandler(console)
+    logging.basicConfig(
+        level=logging.DEBUG if dev else logging.INFO,
+        handlers=[console, file] if dev else [file],
+        format=syntax)
 
     sys.excepthook = lambda exctype, value, tb: logging.error("".join(traceback.format_exception(exctype, value, tb)))
 

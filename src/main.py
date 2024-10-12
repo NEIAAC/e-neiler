@@ -6,7 +6,9 @@
 # nuitka-project-if: {OS} == "Darwin":
 #    nuitka-project: --macos-create-app-bundle
 
+import logging
 import sys
+import time
 
 from app import App
 from window import Window

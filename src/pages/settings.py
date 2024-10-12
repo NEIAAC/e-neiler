@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtCore import Qt
 from qfluentwidgets import ComboBoxSettingCard, FluentIcon, Theme
 
 from utils.config import customizable
@@ -19,8 +20,13 @@ class SettingsPage(QWidget):
                "System"
             ]
         )
+        comboBox.setMaximumWidth(500)
 
-        layout = QVBoxLayout()
-        layout.addWidget(comboBox)
+        mainLayout = QVBoxLayout()
+        mainLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        mainLayout.setContentsMargins(40, 40, 40, 40)
+        mainLayout.setSpacing(40)
 
-        self.setLayout(layout)
+        mainLayout.addWidget(comboBox)
+
+        self.setLayout(mainLayout)

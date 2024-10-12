@@ -14,10 +14,14 @@ class Window(FluentWindow):
 
         self.addSubInterface(HomePage(), FluentIcon.HOME, "Home")
         self.addSubInterface(SettingsPage(), FluentIcon.SETTING, "Settings", position=NavigationItemPosition.BOTTOM)
-
-        self.restoreGeometry(QSettings().value(GEOMETRY_KEY))
+        if (QSettings().value(GEOMETRY_KEY)):
+            self.restoreGeometry(QSettings().value(GEOMETRY_KEY))
+        else:
+            self.resize(500, 500)
         if (QSettings().value(STATE_KEY)):
             self.showMaximized()
+
+        self.setMicaEffectEnabled(False)
 
     def closeEvent(self, event):
         """Saves the current window geometry before closing."""
