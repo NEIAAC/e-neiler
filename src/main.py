@@ -6,17 +6,17 @@
 # nuitka-project-if: {OS} == "Darwin":
 #    nuitka-project: --macos-create-app-bundle
 
-import logging
 import sys
-import time
 
+from utils.logger import logger
 from app import App
 from window import Window
 
 if __name__ == "__main__":
-    app = App(sys.argv)
+    with logger.catch():
+        app = App(sys.argv)
 
-    window = Window()
-    window.show()
+        window = Window()
+        window.show()
 
-    sys.exit(app.exec())
+        sys.exit(app.exec())

@@ -1,66 +1,25 @@
-import datetime
-import sys, os, logging, logging.handlers
-import traceback
-from contextlib import contextmanager
+import os
+import sys
 
-from PySide6.QtCore import QStandardPaths
+from loguru import logger
 
-class Formatter(logging.Formatter):
-    def formatTime(self, record, datefmt=None):
-        timestamp = datetime.datetime.fromtimestamp(record.created, datetime.timezone.utc)
-        return timestamp.strftime(datefmt) if datefmt else timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+from app import DATA_PATH
 
-def setup():
-    """
-    Sets up the root logger to the respective QT platform-specific folder, based on the organization and app name.\n
-    Development: logs to stdout and file.\n
-    Compiled: logs only to file.\n
-    """
+path = os.path.join(DATA_PATH, "logs")
 
-    path = os.path.join(QStandardPaths.writableLocation(QStandardPaths.StandardLocation.AppDataLocation), "logs")
+formatter = "[{time:YYYY-MM-DDTHH:mm:ss.SSS[Z]}] [<level>{level}</level>] {message}"
 
-    if not os.path.exists(path):
-        os.makedirs(path)
+dev = "__compiled__" not in globals()
 
-    syntax = "[%(asctime)s] [%(levelname)s] %(message)s"
+logger.remove()
+logger.level("INFO", color="<green>")
 
-    formatter = Formatter(syntax)
+if dev:
+    logger.add(sys.stdout, colorize=True, format=formatter, level="DEBUG")
 
-    def namer(name: str):
-        dir, file = os.path.split(name)
-        _, timestamp = file.rsplit(".", 1)
-        return os.path.join(dir, f"{timestamp}.log")
-
-    file = logging.handlers.TimedRotatingFileHandler(
-        os.path.join(path, "{:%Y-%m-%d}.log".format(datetime.datetime.now(tz=datetime.timezone.utc).date())),
-        backupCount=30,
-        when="midnight",
-        delay=True,
-        utc=True)
-    file.setFormatter(formatter)
-    file.namer = namer
-
-    console = logging.StreamHandler()
-    console.setFormatter(formatter)
-
-    dev = "__compiled__" not in globals()
-
-    logging.basicConfig(
-        level=logging.DEBUG if dev else logging.INFO,
-        handlers=[console, file] if dev else [file],
-        format=syntax)
-
-    sys.excepthook = lambda exctype, value, tb: logging.error("".join(traceback.format_exception(exctype, value, tb)))
-
-@contextmanager
-def suppressor():
-    """
-    Suppresses stdout output when used as a context manager.
-    """
-    with open(os.devnull, "w") as devnull:
-        old = sys.stdout
-        sys.stdout = devnull
-        try:
-            yield
-        finally:
-            sys.stdout = old
+logger.add(os.path.join(path, "{time:YYYY-MM-DD!UTC}.log".replace("\\", "/")),
+           format=formatter,
+           rotation="1 day",
+           retention="30 days",
+           compression="zip",
+           level="DEBUG" if dev else "INFO")
