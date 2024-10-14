@@ -3,11 +3,11 @@ import sys
 
 from loguru import logger
 
-from app import DATA_PATH
+from utils.contants import DATA_PATH
 
-path = os.path.join(DATA_PATH, "logs")
+LOGS_PATH = os.path.join(DATA_PATH, "logs")
 
-formatter = "[{time:YYYY-MM-DDTHH:mm:ss.SSS[Z]}] [<level>{level}</level>] {message}"
+formatter = "[{time:YYYY-MM-DDTHH:mm:ss.SSS[Z]!UTC}] [<level>{level}</level>] {message}"
 
 dev = "__compiled__" not in globals()
 
@@ -17,9 +17,8 @@ logger.level("INFO", color="<green>")
 if dev:
     logger.add(sys.stdout, colorize=True, format=formatter, level="DEBUG")
 
-logger.add(os.path.join(path, "{time:YYYY-MM-DD!UTC}.log".replace("\\", "/")),
+logger.add(os.path.join(LOGS_PATH, "{time:YYYY-MM-DD!UTC}.log".replace("\\", "/")),
            format=formatter,
-           rotation="1 day",
+           rotation="00:00",
            retention="30 days",
-           compression="zip",
            level="DEBUG" if dev else "INFO")

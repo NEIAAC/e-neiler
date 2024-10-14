@@ -1,7 +1,15 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QMessageBox
 from PySide6.QtCore import Qt
-from qfluentwidgets import ComboBoxSettingCard, ColorSettingCard, PrimaryToolButton, FluentIcon, FlowLayout, Dialog, Theme
 import qfluentwidgets
+from qfluentwidgets import (
+    ComboBoxSettingCard,
+    ColorSettingCard,
+    PrimaryToolButton,
+    FluentIcon,
+    FlowLayout,
+    SingleDirectionScrollArea,
+    Dialog
+)
 
 from utils.config import config
 
@@ -17,41 +25,57 @@ class SettingsPage(QWidget):
             "Change the theme mode of the app.",
             texts=[
                theme.value
-               if theme.value != Theme.AUTO.value else "Automatic"
-               for theme in Theme
+               if theme.value != qfluentwidgets.Theme.AUTO.value else "Automatic"
+               for theme in qfluentwidgets.Theme
             ]
         )
         comboBox.setMaximumWidth(500)
-        config.style.valueChanged.connect(lambda theme: (qfluentwidgets.setTheme(theme)))
 
         colorPicker = ColorSettingCard(
-            config.primaryColor,
+            config.color,
             FluentIcon.PALETTE,
             "Color",
             "Change the primary color of the app.",
         )
         colorPicker.setMaximumWidth(500)
-        config.primaryColor.valueChanged.connect(lambda color: (qfluentwidgets.setThemeColor(color)))
 
         settingsLayout = FlowLayout()
         settingsLayout.addWidget(comboBox)
         settingsLayout.addWidget(colorPicker)
 
+
+        dialog = Dialog(
+            "Are you sure you want to reset all settings?",
+            "Every value will return to its default if you proceed.",
+        )
+        dialog.setTitleBarVisible(False)
+        dialog.yesButton.setText("Reset")
+        dialog.cancelButton.setText("Cancel")
+
         reset = PrimaryToolButton(
-            FluentIcon.SYNC,
+            FluentIcon.HISTORY
         )
         reset.setFixedWidth(100)
-        reset.clicked.connect(lambda: config.reset())
+        reset.clicked.connect(lambda: (config.reset() if dialog.exec() else None))
 
         resetLayout = QHBoxLayout()
         resetLayout.addWidget(reset)
 
-        mainLayout = QVBoxLayout()
-        mainLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        mainLayout.setContentsMargins(40, 40, 40, 40)
-        mainLayout.setSpacing(40)
+        contentWidget = QWidget()
+        contentLayout = QVBoxLayout(contentWidget)
+        contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        contentLayout.setContentsMargins(40, 40, 40, 40)
+        contentLayout.setSpacing(40)
+        contentLayout.addLayout(resetLayout)
+        contentLayout.addLayout(settingsLayout)
 
-        mainLayout.addLayout(resetLayout)
-        mainLayout.addLayout(settingsLayout)
+        scrollArea = SingleDirectionScrollArea(orient=Qt.Orientation.Vertical)
+        scrollArea.setWidget(contentWidget)
+        scrollArea.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
+        scrollArea.setWidgetResizable(True)
+        scrollArea.enableTransparentBackground()
+
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(scrollArea)
 
         self.setLayout(mainLayout)

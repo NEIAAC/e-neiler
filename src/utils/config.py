@@ -1,6 +1,7 @@
 import os
 
-from PySide6.QtCore import QLocale, QStandardPaths
+import qfluentwidgets
+from PySide6.QtCore import QLocale
 from qfluentwidgets import (
     qconfig,
     QConfig,
@@ -11,40 +12,46 @@ from qfluentwidgets import (
     ColorSerializer,
     ColorValidator,
 )
-import qfluentwidgets
 
-from app import DATA_PATH
+from utils.contants import DATA_PATH
 
-APP_NAME = "E-neiler"
-AUTHOR_NAME = "NEIAAC"
+CONFIG_PATH = os.path.join(DATA_PATH, "config.json")
+
+class ConfigItem(OptionsConfigItem):
+    def set(self, value):
+        self.value = value
+
+    def get(self):
+        return self.value
 
 class Config(QConfig):
     """
     Global object for app options.
-
-    ThemeMode and ThemeColor are already present from the base qfluentwidgets.Config class.
     """
 
-    country = OptionsConfigItem("App", "Locale", QLocale.Country.UnitedStates,
-                               OptionsValidator(QLocale.Country), EnumSerializer(QLocale.Country), restart=True)
-    language = OptionsConfigItem("App", "Language", QLocale.Language.English,
-                                OptionsValidator(QLocale.Language), EnumSerializer(QLocale.Language), restart=True)
+    maximized = ConfigItem("Window", "Maximized", False, BoolValidator())
+    width = ConfigItem("Window", "Width", 500)
+    height = ConfigItem("Window", "Height", 500)
+    x = ConfigItem("Window", "X", 0)
+    y = ConfigItem("Window", "Y", 0)
 
-    maximized = OptionsConfigItem("Window", "Maximized", False, BoolValidator())
-    width = OptionsConfigItem("Window", "Width", 500)
-    height = OptionsConfigItem("Window", "Height", 500)
-    x = OptionsConfigItem("Window", "X", 0)
-    y = OptionsConfigItem("Window", "Y", 0)
+    style = ConfigItem("QFluentWidgets", "ThemeMode", qfluentwidgets.Theme.DARK,
+                              OptionsValidator(qfluentwidgets.Theme), EnumSerializer(qfluentwidgets.Theme), restart=True)
+    color = ConfigItem("QFluentWidgets", "ThemeColor", qfluentwidgets.QColor("#4DA8DF"),
+                                     ColorValidator(qfluentwidgets.QColor()), ColorSerializer(), restart=True)
 
-    style = OptionsConfigItem("Window", "Style", qfluentwidgets.Theme.LIGHT,
-                              OptionsValidator(qfluentwidgets.Theme), EnumSerializer(qfluentwidgets.Theme), save=True)
-    primaryColor = OptionsConfigItem("Window", "PrimaryColor", qfluentwidgets.QColor("#4DA8DF"),
-                                     ColorValidator(qfluentwidgets.QColor()), ColorSerializer())
+    smtpHost = ConfigItem("Email", "SMTPHost", "")
+    smtpPort = ConfigItem("Email", "SMTPPort", "587")
+    smtpUsername = ConfigItem("Email", "SMTPUsername", "")
+    smtpPassword = ConfigItem("Email", "SMTPPassword", "")
 
     def reset(self):
             for _, attr in self.__class__.__dict__.items():
-                if isinstance(attr, OptionsConfigItem):
-                    attr.value = attr.defaultValue
+                if isinstance(attr, ConfigItem):
+                    attr.set(attr.defaultValue)
 
 config = Config()
-qconfig.load(os.path.join(DATA_PATH, "config.json"), config)
+config.style.valueChanged.connect(lambda mode: (qfluentwidgets.setTheme(mode)))
+config.color.valueChanged.connect(lambda color: (qfluentwidgets.setThemeColor(color)))
+
+qconfig.load(CONFIG_PATH, config)

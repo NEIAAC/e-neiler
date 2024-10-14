@@ -1,52 +1,118 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFileDialog
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFileDialog, QSizePolicy
 from PySide6.QtCore import Qt
-from qfluentwidgets import LineEdit, PasswordLineEdit, TextBrowser, PrimaryToolButton, FluentIcon
+from qfluentwidgets import (
+    LineEdit,
+    PasswordLineEdit,
+    TextEdit,
+    PrimaryToolButton,
+    FluentIcon,
+    SingleDirectionScrollArea,
+    PlainTextEdit
+)
 
-DEFAULT_TEXT = "Use the button on the left to load a template of the email body!"
+from logic.email import EmailerThread
+from utils.config import config
 
 class HomePage(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("Home")
 
-        # SMTP host input
         smtpHostInput = LineEdit()
         smtpHostInput.setMaximumWidth(500)
-        hostLabel = QLabel("SMTP HOST")
+        smtpHostInput.setText(config.smtpHost.get())
+        smtpHostInput.setPlaceholderText("smtp.gmail.com")
+        smtpHostInput.textChanged.connect(lambda text: config.smtpHost.set(text))
+        smtphostLabel = QLabel("SMTP HOST")
+
+        smtpPortInput = LineEdit()
+        smtpPortInput.setMaximumWidth(500)
+        smtpPortInput.setText(config.smtpPort.get())
+        smtpHostInput.textChanged.connect(lambda text: config.smtpPort.set(text))
+        smtpPortLabel = QLabel("SMTP PORT")
 
         smtpHostInputLayout = QVBoxLayout()
         smtpHostInputLayout.setSpacing(10)
-        smtpHostInputLayout.addWidget(hostLabel)
+        smtpHostInputLayout.addWidget(smtphostLabel)
         smtpHostInputLayout.addWidget(smtpHostInput)
 
-        # SMTP password input
+        smtpPortInputLayout = QVBoxLayout()
+        smtpPortInputLayout.setSpacing(10)
+        smtpPortInputLayout.addWidget(smtpPortLabel)
+        smtpPortInputLayout.addWidget(smtpPortInput)
+
+        smtpServerLayout = QHBoxLayout()
+        smtpServerLayout.addLayout(smtpHostInputLayout)
+        smtpServerLayout.addLayout(smtpPortInputLayout)
+
+        smtpUsernameInput = LineEdit()
+        smtpUsernameInput.setMaximumWidth(500)
+        smtpUsernameInput.setText(config.smtpUsername.get())
+        smtpUsernameInput.setPlaceholderText("person@example.com")
+        smtpUsernameInput.textChanged.connect(lambda text: config.smtpUsername.set(text))
+        smtpusernameLabel = QLabel("SMTP USERNAME")
+
+        smtpUsernameLayout = QVBoxLayout()
+        smtpUsernameLayout.setSpacing(10)
+        smtpUsernameLayout.addWidget(smtpusernameLabel)
+        smtpUsernameLayout.addWidget(smtpUsernameInput)
+
         smtpPasswordInput = PasswordLineEdit()
+        smtpPasswordInput.setText(config.smtpPassword.get())
         smtpPasswordInput.setMaximumWidth(500)
-        passwordLabel = QLabel("SMTP PASSWORD")
+        smtpPasswordInput.textChanged.connect(lambda text: config.smtpPassword.set(text))
+        smtppasswordLabel = QLabel("SMTP PASSWORD")
 
-        smtpPasswordInputLayout = QVBoxLayout()
-        smtpPasswordInputLayout.setSpacing(10)
-        smtpPasswordInputLayout.addWidget(passwordLabel)
-        smtpPasswordInputLayout.addWidget(smtpPasswordInput)
+        smtpPasswordLayout = QVBoxLayout()
+        smtpPasswordLayout.setSpacing(10)
+        smtpPasswordLayout.addWidget(smtppasswordLabel)
+        smtpPasswordLayout.addWidget(smtpPasswordInput)
 
-        # Create a new VBox for the SMTP input fields
-        smtpInputLayout = QVBoxLayout()
-        smtpInputLayout.setSpacing(20)
-        smtpInputLayout.addLayout(smtpHostInputLayout)
-        smtpInputLayout.addLayout(smtpPasswordInputLayout)
+        smtpAuthLayout = QHBoxLayout()
+        smtpAuthLayout.addLayout(smtpUsernameLayout)
+        smtpAuthLayout.addLayout(smtpPasswordLayout)
 
-        # Body file dialog
-        bodyFileDialog = QFileDialog()
-        bodyFileDialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        smtpLayout = QVBoxLayout()
+        smtpLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        smtpLayout.setSpacing(20)
+        smtpLayout.addLayout(smtpServerLayout)
+        smtpLayout.addLayout(smtpAuthLayout)
 
-        # Email body input (TextBrowser)
-        emailBodyInput = TextBrowser()
-        emailBodyInput.setReadOnly(True)
-        emailBodyInput.setPlaceholderText(DEFAULT_TEXT)
+        subjectInput = LineEdit()
+        subjectInput.setMaximumWidth(500)
+        subjectLabel = QLabel("SUBJECT")
 
-        clearBodyButton = PrimaryToolButton(FluentIcon.DELETE)
-        clearBodyButton.setDisabled(True)
-        clearBodyButton.clicked.connect(lambda: (emailBodyInput.clear(), clearBodyButton.setDisabled(True)))
+        ccInput = LineEdit()
+        ccInput.setMaximumWidth(500)
+        ccInput.setPlaceholderText("Use a comma (,) to separate emails you want to CC!")
+        ccLabel = QLabel("CC")
+
+        bccInput = LineEdit()
+        bccInput.setMaximumWidth(500)
+        bccInput.setPlaceholderText("Use a comma (,) to separate emails you want to BCC!")
+        bccLabel = QLabel("BCC")
+
+        headLayout = QVBoxLayout()
+        headLayout.setSpacing(10)
+        headLayout.addWidget(subjectLabel)
+        headLayout.addWidget(subjectInput)
+        headLayout.addWidget(ccLabel)
+        headLayout.addWidget(ccInput)
+        headLayout.addWidget(bccLabel)
+        headLayout.addWidget(bccInput)
+
+        templatePicker = QFileDialog()
+        templatePicker.setFileMode(QFileDialog.FileMode.ExistingFile)
+
+        templateContentBox = TextEdit()
+        templateContentBox.setMinimumHeight(150)
+        templateContentBox.setReadOnly(True)
+        templateContentBox.setPlaceholderText(
+            "Use the button on the left to load a template for the email body and visualize it here...")
+
+        clearTemplateButton = PrimaryToolButton(FluentIcon.DELETE)
+        clearTemplateButton.setDisabled(True)
+        clearTemplateButton.clicked.connect(lambda: (templateContentBox.clear(), clearTemplateButton.setDisabled(True)))
 
         def loadEmailBody(emailBodyInput, filePath):
             if filePath:
@@ -56,45 +122,57 @@ class HomePage(QWidget):
                         emailBodyInput.setHtml(fileContent)
                     else:
                         emailBodyInput.setText(fileContent)
-                    clearBodyButton.setDisabled(False)
+                    clearTemplateButton.setDisabled(False)
 
-        selectBodyButton = PrimaryToolButton(FluentIcon.FOLDER)
-        selectBodyButton.clicked.connect(lambda: loadEmailBody(emailBodyInput, bodyFileDialog.getOpenFileName()[0]))
+        templatePickerButton = PrimaryToolButton(FluentIcon.FOLDER)
+        templatePickerButton.clicked.connect(lambda: loadEmailBody(templateContentBox, templatePicker.getOpenFileName()[0]))
 
-        # Create horizontal layout for buttons and email body
-        emailReaderLayout = QHBoxLayout()
-        emailReaderLayout.setSpacing(10)
-        buttonLayout = QVBoxLayout()
-        buttonLayout.setSpacing(10)
+        templateButtonsLayout = QVBoxLayout()
+        templateButtonsLayout.setSpacing(10)
+        templateButtonsLayout.addWidget(templatePickerButton)
+        templateButtonsLayout.addWidget(clearTemplateButton)
+        templateButtonsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        # Add buttons to buttonLayout
-        buttonLayout.addWidget(selectBodyButton)
-        buttonLayout.addWidget(clearBodyButton)
+        templateLayout = QHBoxLayout()
+        templateLayout.setSpacing(10)
+        templateLayout.addLayout(templateButtonsLayout)
+        templateLayout.addWidget(templateContentBox)
 
-        # Align the buttons to the top of the buttonLayout
-        buttonLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        outputBox = PlainTextEdit()
+        outputBox.setMinimumHeight(150)
+        outputBox.setReadOnly(True)
+        outputBox.setDisabled(True)
+        outputBox.setPlaceholderText("Progress will be shown here.")
 
-        # Add button layout (left) and emailBodyInput (right) to bodyLayout
-        emailReaderLayout.addLayout(buttonLayout)
-        emailReaderLayout.addWidget(emailBodyInput)
-
-        # submit button
         startButton = PrimaryToolButton(FluentIcon.PLAY)
         startButton.setFixedWidth(100)
+
+        worker = EmailerThread(outputBox, "data")
+        worker.finished.connect(lambda: startButton.setDisabled(False))
 
         startButtonLayout = QHBoxLayout()
         startButtonLayout.setAlignment(Qt.AlignmentFlag.AlignRight)
         startButtonLayout.addWidget(startButton)
+        startButton.clicked.connect(lambda: (startButton.setDisabled(True), worker.start()))
 
-        # Main layout for the entire page
+        contentWidget = QWidget()
+        contentLayout = QVBoxLayout(contentWidget)
+        contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        contentLayout.setContentsMargins(40, 40, 40, 40)
+        contentLayout.setSpacing(40)
+        contentLayout.addLayout(smtpLayout)
+        contentLayout.addLayout(headLayout)
+        contentLayout.addLayout(templateLayout)
+        contentLayout.addWidget(outputBox)
+        contentLayout.addLayout(startButtonLayout)
+
+        scrollArea = SingleDirectionScrollArea(orient=Qt.Orientation.Vertical)
+        scrollArea.setWidget(contentWidget)
+        scrollArea.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
+        scrollArea.setWidgetResizable(True)
+        scrollArea.enableTransparentBackground()
+
         mainLayout = QVBoxLayout()
-        mainLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        mainLayout.setContentsMargins(40, 40, 40, 40)
-        mainLayout.setSpacing(40)
+        mainLayout.addWidget(scrollArea)
 
-        mainLayout.addLayout(smtpInputLayout)
-        mainLayout.addLayout(emailReaderLayout)  # Add the horizontal layout for buttons and text
-        mainLayout.addLayout(startButtonLayout)
-
-        # Set the main layout
         self.setLayout(mainLayout)

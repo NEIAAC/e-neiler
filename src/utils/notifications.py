@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QSystemTrayIcon
 from PySide6.QtGui import QIcon, QPixmap
 
-from app import LOGO_PATH
+from utils.contants import LOGO_PATH
 
 class Notifications(QSystemTrayIcon):
     def __init__(self):
