@@ -1,11 +1,13 @@
 import time
 
-from PySide6.QtCore import QThread
+from PySide6.QtCore import Qt, QThread
 from qfluentwidgets import (
-    PlainTextEdit
+    PlainTextEdit,
 )
 
 from utils.logger import logger
+from utils.notifications import Notifications
+from app import App
 
 class EmailerThread(QThread):
 
@@ -24,3 +26,7 @@ class EmailerThread(QThread):
         self.output(self.data)
         time.sleep(1)
         self.output("Emails sent!")
+        App.alert(self.box, 0)
+        App.applicationState()
+        if(App.applicationState() == Qt.ApplicationState.ApplicationInactive):
+            Notifications().send("Process finished!", "All emails have been sent.")

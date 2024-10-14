@@ -5,7 +5,7 @@ from PySide6.QtGui import QIcon, QPixmap
 from version import __version__
 from utils import path
 from utils.logger import logger
-from utils.contants import EXECUTABLE_NAME, AUTHOR_NAME, AUTHOR_DOMAIN, LOGO_PATH
+from utils.constants import EXECUTABLE_NAME, AUTHOR_NAME, AUTHOR_DOMAIN, LOGO_PATH
 
 class App(QApplication):
     def __init__(self, argv: list[str]):

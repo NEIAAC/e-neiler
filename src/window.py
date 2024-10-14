@@ -9,7 +9,7 @@ try:
 finally:
     sys.stdout.close()
     sys.stdout = old
-from PySide6.QtCore import QSize, QPoint
+from PySide6.QtCore import QSize, QPoint, QEventLoop, QTimer
 
 from utils.config import config
 from pages.home import HomePage
@@ -28,15 +28,14 @@ class Window(FluentWindow):
         qfluentwidgets.setTheme(config.style.get())
         qfluentwidgets.setThemeColor(config.color.get())
 
-        # self.splashScreen = SplashScreen(self.windowIcon(), self)
-        # self.splashScreen.setIconSize(QSize(256, 256))
-
-        # self.show()
+        self.splashScreen = SplashScreen(self.windowIcon(), self)
+        self.splashScreen.setIconSize(QSize(128, 128))
+        self.show()
 
         self.addSubInterface(HomePage(), FluentIcon.HOME, "Home")
         self.addSubInterface(SettingsPage(), FluentIcon.SETTING, "Settings", NavigationItemPosition.BOTTOM)
 
-        # self.splashScreen.finish()
+        self.splashScreen.finish()
 
     def closeEvent(self, event):
         """Saves the current window geometry before closing."""

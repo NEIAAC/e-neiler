@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy
 from PySide6.QtCore import Qt
 import qfluentwidgets
 from qfluentwidgets import (
@@ -64,7 +64,7 @@ class SettingsPage(QWidget):
         contentWidget = QWidget()
         contentLayout = QVBoxLayout(contentWidget)
         contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        contentLayout.setContentsMargins(40, 40, 40, 40)
+        contentLayout.setContentsMargins(40, 40, 50, 40)
         contentLayout.setSpacing(40)
         contentLayout.addLayout(resetLayout)
         contentLayout.addLayout(settingsLayout)

@@ -9,15 +9,16 @@ from qfluentwidgets import (
     SingleDirectionScrollArea,
     PlainTextEdit
 )
-
 from logic.email import EmailerThread
 from utils.config import config
+from utils.constants import SUPPORTED_TABLE_FORMATS
 
 class HomePage(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("Home")
 
+        # SMTP Settings
         smtpHostInput = LineEdit()
         smtpHostInput.setMaximumWidth(500)
         smtpHostInput.setText(config.smtpHost.get())
@@ -28,7 +29,7 @@ class HomePage(QWidget):
         smtpPortInput = LineEdit()
         smtpPortInput.setMaximumWidth(500)
         smtpPortInput.setText(config.smtpPort.get())
-        smtpHostInput.textChanged.connect(lambda text: config.smtpPort.set(text))
+        smtpPortInput.textChanged.connect(lambda text: config.smtpPort.set(text))
         smtpPortLabel = QLabel("SMTP PORT")
 
         smtpHostInputLayout = QVBoxLayout()
@@ -78,6 +79,7 @@ class HomePage(QWidget):
         smtpLayout.addLayout(smtpServerLayout)
         smtpLayout.addLayout(smtpAuthLayout)
 
+        # Email Fields
         subjectInput = LineEdit()
         subjectInput.setMaximumWidth(500)
         subjectLabel = QLabel("SUBJECT")
@@ -108,24 +110,15 @@ class HomePage(QWidget):
         templateContentBox.setMinimumHeight(150)
         templateContentBox.setReadOnly(True)
         templateContentBox.setPlaceholderText(
-            "Use the button on the left to load a template for the email body and visualize it here...")
+            "Use the button on the left to load a template for the email body and visualize it here..."
+        )
 
         clearTemplateButton = PrimaryToolButton(FluentIcon.DELETE)
         clearTemplateButton.setDisabled(True)
-        clearTemplateButton.clicked.connect(lambda: (templateContentBox.clear(), clearTemplateButton.setDisabled(True)))
-
-        def loadEmailBody(emailBodyInput, filePath):
-            if filePath:
-                with open(filePath, 'r', encoding='utf-8') as file:
-                    fileContent = file.read()
-                    if filePath.endswith('.html'):
-                        emailBodyInput.setHtml(fileContent)
-                    else:
-                        emailBodyInput.setText(fileContent)
-                    clearTemplateButton.setDisabled(False)
+        clearTemplateButton.clicked.connect(lambda: self.clearTemplate(templateContentBox, clearTemplateButton))
 
         templatePickerButton = PrimaryToolButton(FluentIcon.FOLDER)
-        templatePickerButton.clicked.connect(lambda: loadEmailBody(templateContentBox, templatePicker.getOpenFileName()[0]))
+        templatePickerButton.clicked.connect(lambda: self.loadEmailBody(templateContentBox, clearTemplateButton, templatePicker))
 
         templateButtonsLayout = QVBoxLayout()
         templateButtonsLayout.setSpacing(10)
@@ -137,6 +130,25 @@ class HomePage(QWidget):
         templateLayout.setSpacing(10)
         templateLayout.addLayout(templateButtonsLayout)
         templateLayout.addWidget(templateContentBox)
+
+        tableFilePathLabel = QLabel("No table file selected")
+        tableFilePathLabel.setMaximumWidth(500)
+
+        tableFilePickerButton = PrimaryToolButton(FluentIcon.FOLDER)
+        tableFilePickerButton.clicked.connect(lambda: self.selectFile(tableFilePathLabel))
+
+        clearTableButton = PrimaryToolButton(FluentIcon.DELETE)
+        clearTableButton.setDisabled(True)
+        clearTableButton.clicked.connect(lambda: self.clearSelectedFile(tableFilePathLabel, clearTableButton))
+
+        tablePickerLayout = QHBoxLayout()
+        tablePickerLayout.setSpacing(10)
+        tablePickerLayout.addWidget(tableFilePickerButton)
+        tablePickerLayout.addWidget(tableFilePathLabel)
+
+        tableLayout = QVBoxLayout()
+        tableLayout.addLayout(tablePickerLayout)
+        tableLayout.addWidget(clearTableButton)
 
         outputBox = PlainTextEdit()
         outputBox.setMinimumHeight(150)
@@ -158,11 +170,12 @@ class HomePage(QWidget):
         contentWidget = QWidget()
         contentLayout = QVBoxLayout(contentWidget)
         contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        contentLayout.setContentsMargins(40, 40, 40, 40)
+        contentLayout.setContentsMargins(40, 40, 50, 40)
         contentLayout.setSpacing(40)
         contentLayout.addLayout(smtpLayout)
         contentLayout.addLayout(headLayout)
         contentLayout.addLayout(templateLayout)
+        contentLayout.addLayout(tableLayout)
         contentLayout.addWidget(outputBox)
         contentLayout.addLayout(startButtonLayout)
 
@@ -176,3 +189,32 @@ class HomePage(QWidget):
         mainLayout.addWidget(scrollArea)
 
         self.setLayout(mainLayout)
+
+    def loadEmailBody(self, templateContentBox, clearTemplateButton, templatePicker):
+        filePath, _ = templatePicker.getOpenFileName()
+        if filePath:
+            with open(filePath, 'r', encoding='utf-8') as file:
+                fileContent = file.read()
+                if filePath.endswith('.html'):
+                    templateContentBox.setHtml(fileContent)
+                else:
+                    templateContentBox.setText(fileContent)
+                clearTemplateButton.setDisabled(False)
+
+    def clearTemplate(self, templateContentBox, clearTemplateButton):
+        templateContentBox.clear()
+        clearTemplateButton.setDisabled(True)
+
+    def selectFile(self, filePathLabel):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+        file_dialog.setNameFilters(SUPPORTED_TABLE_FORMATS)
+
+        if file_dialog.exec():
+            selected_files = file_dialog.selectedFiles()
+            if selected_files:
+                filePathLabel.setText(selected_files[0])
+
+    def clearSelectedFile(self, filePathLabel, clearButton):
+        filePathLabel.setText("No table file selected")
+        clearButton.setDisabled(True)

@@ -3,7 +3,7 @@ import sys
 
 from loguru import logger
 
-from utils.contants import DATA_PATH
+from utils.constants import DATA_PATH
 
 LOGS_PATH = os.path.join(DATA_PATH, "logs")
 
