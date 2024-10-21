@@ -9,10 +9,10 @@ permissions:
   pull-requests: write
 
 jobs:
-  python:
+  metadata:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
+      - name: Update project metadata and the release pull request
+        uses: googleapis/release-please-action@v4
         with:
-          # Updates CHANGELOG.md and creates a tagged release in github
           release-type: python
