@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPixmap
 
 from version import __version__
@@ -22,9 +21,6 @@ class App(QApplication):
         self.setOrganizationDomain(AUTHOR_DOMAIN)
         self.setApplicationVersion(__version__)
         self.setWindowIcon(QIcon(QPixmap(loader.resources(LOGO_PATH))))
-        self.setHighDpiScaleFactorRoundingPolicy(
-            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-        )
 
         data = [
             self.applicationName(),

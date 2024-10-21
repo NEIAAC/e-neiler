@@ -3,14 +3,17 @@ from pytestqt.qtbot import QtBot
 
 from window import Window
 
+
 def testSetup(qtbot: QtBot):
     window = Window()
+    name = "Test"
     qtbot.addWidget(window)
-    window.setWindowTitle("W1")
+    window.setWindowTitle(name)
     window.show()
 
     assert window.isVisible()
-    assert window.windowTitle() == "W1"
+    assert window.windowTitle() == name
+
 
 def testExitButton(qtbot: QtBot):
     window = Window()
