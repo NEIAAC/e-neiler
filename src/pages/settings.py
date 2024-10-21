@@ -8,74 +8,79 @@ from qfluentwidgets import (
     FluentIcon,
     FlowLayout,
     SingleDirectionScrollArea,
-    Dialog
+    Dialog,
 )
 
 from utils.config import config
+
 
 class SettingsPage(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("Settings")
 
-        comboBox = ComboBoxSettingCard(
+        self.comboBox = ComboBoxSettingCard(
             config.style,
             FluentIcon.BRUSH,
             "Theme",
             "Change the theme mode of the app.",
             texts=[
-               theme.value
-               if theme.value != qfluentwidgets.Theme.AUTO.value else "Automatic"
-               for theme in qfluentwidgets.Theme
-            ]
+                theme.value
+                if theme.value != qfluentwidgets.Theme.AUTO.value
+                else "Automatic"
+                for theme in qfluentwidgets.Theme
+            ],
         )
-        comboBox.setMaximumWidth(500)
+        self.comboBox.setMaximumWidth(500)
 
-        colorPicker = ColorSettingCard(
+        self.colorPicker = ColorSettingCard(
             config.color,
             FluentIcon.PALETTE,
             "Color",
             "Change the primary color of the app.",
         )
-        colorPicker.setMaximumWidth(500)
+        self.colorPicker.setMaximumWidth(500)
 
-        settingsLayout = FlowLayout()
-        settingsLayout.addWidget(comboBox)
-        settingsLayout.addWidget(colorPicker)
+        self.settingsLayout = FlowLayout()
+        self.settingsLayout.addWidget(self.comboBox)
+        self.settingsLayout.addWidget(self.colorPicker)
 
-
-        dialog = Dialog(
+        self.dialog = Dialog(
             "Are you sure you want to reset all settings?",
             "Every value will return to its default if you proceed.",
         )
-        dialog.setTitleBarVisible(False)
-        dialog.yesButton.setText("Reset")
-        dialog.cancelButton.setText("Cancel")
+        self.dialog.setTitleBarVisible(False)
+        self.dialog.yesButton.setText("Reset")
+        self.dialog.cancelButton.setText("Cancel")
 
-        reset = PrimaryToolButton(
-            FluentIcon.HISTORY
+        self.reset = PrimaryToolButton(FluentIcon.HISTORY)
+        self.reset.setFixedWidth(100)
+        self.reset.clicked.connect(
+            lambda: (config.reset() if self.dialog.exec() else None)
         )
-        reset.setFixedWidth(100)
-        reset.clicked.connect(lambda: (config.reset() if dialog.exec() else None))
 
-        resetLayout = QHBoxLayout()
-        resetLayout.addWidget(reset)
+        self.resetLayout = QHBoxLayout()
+        self.resetLayout.addWidget(self.reset)
 
-        contentWidget = QWidget()
-        contentLayout = QVBoxLayout(contentWidget)
-        contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        contentLayout.setContentsMargins(40, 40, 50, 40)
-        contentLayout.setSpacing(40)
-        contentLayout.addLayout(resetLayout)
-        contentLayout.addLayout(settingsLayout)
+        self.contentWidget = QWidget()
+        self.contentLayout = QVBoxLayout(self.contentWidget)
+        self.contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.contentLayout.setContentsMargins(40, 40, 50, 40)
+        self.contentLayout.setSpacing(40)
+        self.contentLayout.addLayout(self.resetLayout)
+        self.contentLayout.addLayout(self.settingsLayout)
 
-        scrollArea = SingleDirectionScrollArea(orient=Qt.Orientation.Vertical)
-        scrollArea.setWidget(contentWidget)
-        scrollArea.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
-        scrollArea.setWidgetResizable(True)
-        scrollArea.enableTransparentBackground()
+        self.scrollArea = SingleDirectionScrollArea(
+            orient=Qt.Orientation.Vertical
+        )
+        self.scrollArea.setWidget(self.contentWidget)
+        self.scrollArea.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding
+        )
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.enableTransparentBackground()
 
-        mainLayout = QVBoxLayout()
-        mainLayout.addWidget(scrollArea)
+        self.mainLayout = QVBoxLayout()
+        self.mainLayout.addWidget(self.scrollArea)
 
-        self.setLayout(mainLayout)
+        self.setLayout(self.mainLayout)

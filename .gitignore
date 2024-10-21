@@ -1,6 +1,7 @@
 # IDE
 .idea/
 .vscode/
+xcuserdata/
 
 # Environment
 .env*
@@ -13,11 +14,17 @@ venv.bak/
 !.env.example
 
 # Cache
+*_cache
 __pycache__/
 *.py[cod]
 *$py.class
 
 # Build
+*.exe
+*-build
+*-dist
+*.build
+*.dist
 build/
 dist/
 output/
@@ -63,6 +70,7 @@ coverage.xml
 cover/
 
 # Miscellaneous
+.DS_Store
 *.mo
 *.pot
 *.log

@@ -3,9 +3,15 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPixmap
 
 from version import __version__
-from utils import path
+from utils import loader
 from utils.logger import logger
-from utils.constants import EXECUTABLE_NAME, AUTHOR_NAME, AUTHOR_DOMAIN, LOGO_PATH
+from utils.constants import (
+    EXECUTABLE_NAME,
+    AUTHOR_NAME,
+    AUTHOR_DOMAIN,
+    LOGO_PATH,
+)
+
 
 class App(QApplication):
     def __init__(self, argv: list[str]):
@@ -15,8 +21,10 @@ class App(QApplication):
         self.setOrganizationName(AUTHOR_NAME)
         self.setOrganizationDomain(AUTHOR_DOMAIN)
         self.setApplicationVersion(__version__)
-        self.setWindowIcon(QIcon(QPixmap(path.fromBase(LOGO_PATH))))
-        self.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+        self.setWindowIcon(QIcon(QPixmap(loader.resources(LOGO_PATH))))
+        self.setHighDpiScaleFactorRoundingPolicy(
+            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+        )
 
         data = [
             self.applicationName(),
@@ -32,6 +40,8 @@ class App(QApplication):
         logger.info(row)
         logger.info(column)
         for line in data:
-            logger.info(f"|{' ' * padding}{line}{' ' * (length - len(line) + padding)}|")
+            logger.info(
+                f"|{' ' * padding}{line}{' ' * (length - len(line) + padding)}|"
+            )
         logger.info(column)
         logger.info(row)

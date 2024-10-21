@@ -11,8 +11,41 @@ permissions:
 jobs:
   metadata:
     runs-on: ubuntu-latest
+    outputs:
+      major: ${{ steps.metadata.outputs.major }}
+      minor: ${{ steps.metadata.outputs.minor }}
+      patch: ${{ steps.metadata.outputs.patch }}
+      tag-name: ${{ steps.metadata.outputs.tag_name }}
+      release-created: ${{ steps.metadata.outputs.release_created }}
     steps:
       - name: Update project metadata and the release pull request
         uses: googleapis/release-please-action@v4
+        id: metadata
         with:
           release-type: python
+  build:
+    needs: [metadata]
+    if: ${{ needs.metadata.outputs.release-created}}
+    uses: ./.github/workflows/build.yaml
+    with:
+      build-version: ${{ needs.metadata.outputs.major }}.${{ needs.metadata.outputs.minor }}.${{ needs.metadata.outputs.patch }}
+  upload:
+    needs: [metadata, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+      - name: Zip build artifacts
+        run: |
+          (cd ${{ needs.build.outputs.macos-artifact }} && zip -r ../${{ needs.build.outputs.macos-artifact }}.zip .)
+          (cd ${{ needs.build.outputs.linux-artifact }} && zip -r ../${{ needs.build.outputs.linux-artifact }}.zip .)
+          (cd ${{ needs.build.outputs.windows-artifact }} && zip -r ../${{ needs.build.outputs.windows-artifact }}.zip .)
+      - name: Append build artifacts to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: >
+          gh release upload ${{ needs.metadata.outputs.tag-name }}
+          ${{ needs.build.outputs.macos-artifact }}.zip#MacOS
+          ${{ needs.build.outputs.linux-artifact }}.zip#Linux
+          ${{ needs.build.outputs.windows-artifact }}.zip#Windows

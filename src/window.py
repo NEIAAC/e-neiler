@@ -5,15 +5,21 @@ try:
     old = sys.stdout
     sys.stdout = open(os.devnull, "w")
     import qfluentwidgets
-    from qfluentwidgets import FluentWindow, FluentIcon, NavigationItemPosition, SplashScreen
+    from qfluentwidgets import (
+        FluentWindow,
+        FluentIcon,
+        NavigationItemPosition,
+        SplashScreen,
+    )
 finally:
     sys.stdout.close()
     sys.stdout = old
-from PySide6.QtCore import QSize, QPoint, QEventLoop, QTimer
+from PySide6.QtCore import QSize, QPoint
 
 from utils.config import config
 from pages.home import HomePage
 from pages.settings import SettingsPage
+from pages.help import HelpPage
 
 class Window(FluentWindow):
     def __init__(self):
@@ -33,7 +39,15 @@ class Window(FluentWindow):
         self.show()
 
         self.addSubInterface(HomePage(), FluentIcon.HOME, "Home")
-        self.addSubInterface(SettingsPage(), FluentIcon.SETTING, "Settings", NavigationItemPosition.BOTTOM)
+        self.addSubInterface(
+            HelpPage(), FluentIcon.HELP, "Help", NavigationItemPosition.BOTTOM
+        )
+        self.addSubInterface(
+            SettingsPage(),
+            FluentIcon.SETTING,
+            "Settings",
+            NavigationItemPosition.BOTTOM,
+        )
 
         self.splashScreen.finish()
 
