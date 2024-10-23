@@ -290,7 +290,6 @@ class HomePage(QWidget):
         )
 
     def runEmailer(self):
-        """Runs the example logic for this page."""
         if self.worker is not None and self.worker.isRunning():
             return
 
@@ -347,7 +346,9 @@ class HomePage(QWidget):
                 App.applicationState()
                 == Qt.ApplicationState.ApplicationInactive
             ):
-                SystemTray().send("Example finished!", "Go back to the app.")
+                SystemTray().send(
+                    "Emails sent!", "Go back to the app to see the logs."
+                )
             self.finishSound.play()
 
         self.worker.finished.connect(finished)

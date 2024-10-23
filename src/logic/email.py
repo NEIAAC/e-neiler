@@ -83,6 +83,9 @@ class EmailerThread(QThread):
         return content, mainType, subType
 
     def run(self):
+        inputs = self.__dict__.copy()
+        inputs.pop("smtpPassword")
+        logger.info(f"Starting emailer thread with input parameters: {inputs}")
         with logger.catch():
             if not os.path.isdir(self.attachmentDir):
                 self.output(
@@ -97,6 +100,7 @@ class EmailerThread(QThread):
             except Exception as e:
                 self.output(f"Failed to load body template: {e}", "ERROR")
                 return
+            logger.info(f"Body template read: {template}")
 
             try:
                 rows, cols = self.readTable()
@@ -106,6 +110,8 @@ class EmailerThread(QThread):
             except Exception as e:
                 self.output(f"Failed to load table: {e}", "ERROR")
                 return
+            logger.info(f"Table columns read: {cols}")
+            logger.info(f"Table rows read: {rows}")
 
             if not rows or not cols:
                 self.output("Given table is empty", "ERROR")
@@ -207,7 +213,9 @@ class EmailerThread(QThread):
                 try:
                     server.send_message(message)
                     successful += 1
-                    self.output(f"[{total}] Sent email to {row[cols[0]]}")
+                    self.output(
+                        f"[{total}] Sent email to {row[cols[0]]} with {len(filePaths)} {len(filePaths) == 1 and 'attachment' or 'attachments'}"
+                    )
                 except Exception as e:
                     self.output(
                         f"[{total}] Failed to send email to {row[cols[0]]}: {e}",
