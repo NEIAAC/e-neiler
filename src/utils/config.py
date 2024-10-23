@@ -56,9 +56,6 @@ class Config(QConfig):
     smtpPort = ConfigItem("Email", "SMTPPort", "587")
     smtpUsername = ConfigItem("Email", "SMTPUsername", "")
     smtpPassword = ConfigItem("Email", "SMTPPassword", "")
-    subject = ConfigItem("Email", "Subject", "")
-    cc = ConfigItem("Email", "CC", "")
-    bcc = ConfigItem("Email", "BCC", "")
 
     def reset(self):
         for _, attr in self.__class__.__dict__.items():
@@ -67,9 +64,5 @@ class Config(QConfig):
 
 
 config = Config()
-config.style.valueChanged.connect(lambda mode: (qfluentwidgets.setTheme(mode)))
-config.color.valueChanged.connect(
-    lambda color: (qfluentwidgets.setThemeColor(color))
-)
 
 qconfig.load(CONFIG_PATH, config)

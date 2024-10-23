@@ -11,8 +11,8 @@ class HelpPage(QWidget):
         super().__init__()
         self.setObjectName("Help")
 
-        helpText = BodyLabel(
-            f"""
+        self.helpText = BodyLabel(
+            """
             <h1>Help</h1>
 
             <p>
@@ -25,22 +25,24 @@ class HelpPage(QWidget):
            """,
         )
 
-        contentWidget = QWidget()
-        contentLayout = QVBoxLayout(contentWidget)
-        contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        contentLayout.setContentsMargins(40, 40, 50, 40)
-        contentLayout.setSpacing(40)
-        contentLayout.addWidget(helpText)
+        self.contentWidget = QWidget()
+        self.contentLayout = QVBoxLayout(self.contentWidget)
+        self.contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.contentLayout.setContentsMargins(40, 40, 50, 40)
+        self.contentLayout.setSpacing(40)
+        self.contentLayout.addWidget(self.helpText)
 
-        scrollArea = SingleDirectionScrollArea(orient=Qt.Orientation.Vertical)
-        scrollArea.setWidget(contentWidget)
-        scrollArea.setSizePolicy(
+        self.scrollArea = SingleDirectionScrollArea(
+            orient=Qt.Orientation.Vertical
+        )
+        self.scrollArea.setWidget(self.contentWidget)
+        self.scrollArea.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding
         )
-        scrollArea.setWidgetResizable(True)
-        scrollArea.enableTransparentBackground()
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.enableTransparentBackground()
 
-        mainLayout = QVBoxLayout()
-        mainLayout.addWidget(scrollArea)
+        self.mainLayout = QVBoxLayout()
+        self.mainLayout.addWidget(self.scrollArea)
 
-        self.setLayout(mainLayout)
+        self.setLayout(self.mainLayout)

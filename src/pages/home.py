@@ -2,7 +2,6 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
-    QLabel,
     QFileDialog,
     QSizePolicy,
 )
@@ -11,7 +10,7 @@ from PySide6.QtCore import Qt, QUrl
 from qfluentwidgets import (
     LineEdit,
     PasswordLineEdit,
-    TextEdit,
+    BodyLabel,
     PrimaryToolButton,
     FluentIcon,
     SingleDirectionScrollArea,
@@ -25,7 +24,6 @@ from logic.email import EmailerThread
 from utils.config import config
 from utils import loader
 from utils.system_tray import SystemTray
-from utils.constants import SUPPORTED_TABLE_FORMATS
 
 
 class HomePage(QWidget):
@@ -39,7 +37,6 @@ class HomePage(QWidget):
         )
         self.finishSound.setVolume(0.2)
 
-        # SMTP settings
         self.smtpHostInput = LineEdit()
         self.smtpHostInput.setMaximumWidth(500)
         self.smtpHostInput.setText(config.smtpHost.get())
@@ -47,7 +44,7 @@ class HomePage(QWidget):
         self.smtpHostInput.textChanged.connect(
             lambda text: config.smtpHost.set(text)
         )
-        self.smtphostLabel = QLabel("SMTP HOST")
+        self.smtphostLabel = BodyLabel("SMTP HOST*")
 
         self.smtpPortInput = LineEdit()
         self.smtpPortInput.setMaximumWidth(500)
@@ -55,7 +52,7 @@ class HomePage(QWidget):
         self.smtpPortInput.textChanged.connect(
             lambda text: config.smtpPort.set(text)
         )
-        self.smtpPortLabel = QLabel("SMTP PORT")
+        self.smtpPortLabel = BodyLabel("SMTP PORT*")
 
         self.smtpHostInputLayout = QVBoxLayout()
         self.smtpHostInputLayout.setSpacing(10)
@@ -78,7 +75,7 @@ class HomePage(QWidget):
         self.smtpUsernameInput.textChanged.connect(
             lambda text: config.smtpUsername.set(text)
         )
-        self.smtpusernameLabel = QLabel("SMTP USERNAME")
+        self.smtpusernameLabel = BodyLabel("SMTP USERNAME*")
 
         self.smtpUsernameLayout = QVBoxLayout()
         self.smtpUsernameLayout.setSpacing(10)
@@ -91,7 +88,7 @@ class HomePage(QWidget):
         self.smtpPasswordInput.textChanged.connect(
             lambda text: config.smtpPassword.set(text)
         )
-        self.smtppasswordLabel = QLabel("SMTP PASSWORD")
+        self.smtppasswordLabel = BodyLabel("SMTP PASSWORD*")
 
         self.smtpPasswordLayout = QVBoxLayout()
         self.smtpPasswordLayout.setSpacing(10)
@@ -108,24 +105,26 @@ class HomePage(QWidget):
         self.smtpLayout.addLayout(self.smtpServerLayout)
         self.smtpLayout.addLayout(self.smtpAuthLayout)
 
-        # Email headers
+        self.subjectLabel = BodyLabel("SUBJECT*")
         self.subjectInput = LineEdit()
+        self.subjectInput.setPlaceholderText(
+            "The title of the email goes here."
+        )
         self.subjectInput.setMaximumWidth(500)
-        self.subjectLabel = QLabel("SUBJECT")
 
         self.ccInput = LineEdit()
         self.ccInput.setMaximumWidth(500)
         self.ccInput.setPlaceholderText(
             "Use a comma (,) to separate emails you want to CC!"
         )
-        self.ccLabel = QLabel("CC")
+        self.ccLabel = BodyLabel("CC")
 
         self.bccInput = LineEdit()
         self.bccInput.setMaximumWidth(500)
         self.bccInput.setPlaceholderText(
             "Use a comma (,) to separate emails you want to BCC!"
         )
-        self.bccLabel = QLabel("BCC")
+        self.bccLabel = BodyLabel("BCC")
 
         self.headLayout = QVBoxLayout()
         self.headLayout.setSpacing(10)
@@ -136,96 +135,104 @@ class HomePage(QWidget):
         self.headLayout.addWidget(self.bccLabel)
         self.headLayout.addWidget(self.bccInput)
 
+        self.templateLabel = BodyLabel("TEMPLATE FILE*")
         self.templatePicker = QFileDialog()
         self.templatePicker.setFileMode(QFileDialog.FileMode.ExistingFile)
 
-        self.templateContentBox = TextEdit()
-        self.templateContentBox.setMinimumHeight(150)
-        self.templateContentBox.setReadOnly(True)
-        self.templateContentBox.setPlaceholderText(
-            "Use the button on the left to load a template for the email body and visualize it here..."
-        )
+        self.templateFileBox = LineEdit()
+        self.templateFileBox.setMaximumWidth(500)
+        self.templateFileBox.setReadOnly(True)
+        self.templateFileBox.setPlaceholderText("No template file selected.")
 
-        self.clearTemplateButton = PrimaryToolButton(FluentIcon.DELETE)
-        self.clearTemplateButton.setDisabled(True)
-        self.clearTemplateButton.clicked.connect(
-            lambda: self.clearTemplate(
-                self.templateContentBox, self.clearTemplateButton
-            )
-        )
+        self.templateFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
+        self.templateFilePickButton.clicked.connect(self.pickTemplateFile)
 
-        self.templatePickerButton = PrimaryToolButton(FluentIcon.FOLDER)
-        self.templatePickerButton.clicked.connect(
-            lambda: self.loadEmailBody(
-                self.templateContentBox,
-                self.clearTemplateButton,
-                self.templatePicker,
-            )
-        )
+        self.templateContentLayout = QHBoxLayout()
+        self.templateContentLayout.setSpacing(10)
+        self.templateContentLayout.addWidget(self.templateFilePickButton)
+        self.templateContentLayout.addWidget(self.templateFileBox)
 
-        self.templateButtonsLayout = QVBoxLayout()
-        self.templateButtonsLayout.setSpacing(10)
-        self.templateButtonsLayout.addWidget(self.templatePickerButton)
-        self.templateButtonsLayout.addWidget(self.clearTemplateButton)
-        self.templateButtonsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-
-        self.templateLayout = QHBoxLayout()
+        self.templateLayout = QVBoxLayout()
         self.templateLayout.setSpacing(10)
-        self.templateLayout.addLayout(self.templateButtonsLayout)
-        self.templateLayout.addWidget(self.templateContentBox)
+        self.templateLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.templateLayout.addWidget(self.templateLabel)
+        self.templateLayout.addLayout(self.templateContentLayout)
 
-        self.tableFilePathLabel = QLabel("No table file selected")
-        self.tableFilePathLabel.setMaximumWidth(500)
+        self.tableLabel = BodyLabel("TABLE FILE*")
+        self.tableFileInput = LineEdit()
+        self.tableFileInput.setReadOnly(True)
+        self.tableFileInput.setMaximumWidth(500)
+        self.tableFileInput.setPlaceholderText("No table file selected.")
 
-        self.tableFilePickerButton = PrimaryToolButton(FluentIcon.FOLDER)
-        self.tableFilePickerButton.clicked.connect(
-            lambda: self.selectFile(self.tableFilePathLabel)
-        )
+        self.tableFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
+        self.tableFilePickButton.clicked.connect(self.pickTableFile)
 
-        self.clearTableButton = PrimaryToolButton(FluentIcon.DELETE)
-        self.clearTableButton.setDisabled(True)
-        self.clearTableButton.clicked.connect(
-            lambda: self.clearSelectedFile(
-                self.tableFilePathLabel, self.clearTableButton
-            )
-        )
-
-        self.tablePickerLayout = QHBoxLayout()
-        self.tablePickerLayout.setSpacing(10)
-        self.tablePickerLayout.addWidget(self.tableFilePickerButton)
-        self.tablePickerLayout.addWidget(self.tableFilePathLabel)
+        self.tableContentLayout = QHBoxLayout()
+        self.tableContentLayout.setSpacing(10)
+        self.tableContentLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.tableContentLayout.addWidget(self.tableFilePickButton)
+        self.tableContentLayout.addWidget(self.tableFileInput)
 
         self.tableLayout = QVBoxLayout()
-        self.tableLayout.addLayout(self.tablePickerLayout)
-        self.tableLayout.addWidget(self.clearTableButton)
+        self.tableLayout.setSpacing(10)
+        self.tableLayout.addWidget(self.tableLabel)
+        self.tableLayout.addLayout(self.tableContentLayout)
 
-        self.outputBox = PlainTextEdit()
-        self.outputBox.setMinimumHeight(150)
-        self.outputBox.setReadOnly(True)
-        self.outputBox.setPlaceholderText("Progress will be shown here.")
+        self.attachmentLabel = BodyLabel("ATTACHMENTS DIRECTORY*")
+        self.attachmentFolderInput = LineEdit()
+        self.attachmentFolderInput.setReadOnly(True)
+        self.attachmentFolderInput.setMaximumWidth(500)
+        self.attachmentFolderInput.setPlaceholderText(
+            "No attachment folder selected."
+        )
 
-        self.outputClearButton = PrimaryToolButton(FluentIcon.DELETE)
-        self.outputClearButton.setDisabled(True)
-        self.outputClearButton.clicked.connect(self.outputBox.clear)
+        self.attachmentFolderPickButton = PrimaryToolButton(FluentIcon.FOLDER)
+        self.attachmentFolderPickButton.clicked.connect(
+            self.pickAttachmentFolder
+        )
+        self.attachmentContentLayout = QHBoxLayout()
+        self.attachmentContentLayout.setSpacing(10)
+        self.attachmentContentLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.attachmentContentLayout.addWidget(self.attachmentFolderPickButton)
+        self.attachmentContentLayout.addWidget(self.attachmentFolderInput)
 
-        self.outputButtonLayout = QVBoxLayout()
-        self.outputButtonLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.outputButtonLayout.setSpacing(10)
-        self.outputButtonLayout.addWidget(self.outputClearButton)
+        self.attachmentLayout = QVBoxLayout()
+        self.attachmentLayout.setSpacing(10)
+        self.attachmentLayout.addWidget(self.attachmentLabel)
+        self.attachmentLayout.addLayout(self.attachmentContentLayout)
 
-        self.outputLayout = QHBoxLayout()
-        self.outputLayout.setSpacing(10)
-        self.outputLayout.addLayout(self.outputButtonLayout)
-        self.outputLayout.addWidget(self.outputBox)
-
-        self.startButton = PrimaryToolButton(FluentIcon.PLAY)
-        self.startButton.setFixedWidth(100)
+        self.runLogsBox = PlainTextEdit()
+        self.runLogsBox.setMinimumHeight(150)
+        self.runLogsBox.setReadOnly(True)
+        self.runLogsBox.setPlaceholderText(
+            "Press the button on the left to start.\nLog output from the run will be shown here."
+        )
 
         self.worker = None
-        self.startButtonLayout = QHBoxLayout()
-        self.startButtonLayout.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.startButtonLayout.addWidget(self.startButton)
-        self.startButton.clicked.connect(self.runEmailer)
+        self.runButton = PrimaryToolButton(FluentIcon.PLAY)
+        self.runButton.setFixedWidth(100)
+        self.runButton.clicked.connect(self.runEmailer)
+
+        self.runLogsClearButton = PrimaryToolButton(FluentIcon.DELETE)
+        self.runLogsClearButton.setDisabled(True)
+        self.runLogsClearButton.setFixedWidth(100)
+        self.runLogsClearButton.clicked.connect(
+            lambda: (
+                self.runLogsBox.clear(),
+                self.runLogsClearButton.setDisabled(True),
+            )
+        )
+
+        self.runButtonLayout = QVBoxLayout()
+        self.runButtonLayout.setSpacing(10)
+        self.runButtonLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.runButtonLayout.addWidget(self.runButton)
+        self.runButtonLayout.addWidget(self.runLogsClearButton)
+
+        self.runContentLayout = QHBoxLayout()
+        self.runContentLayout.setSpacing(10)
+        self.runContentLayout.addLayout(self.runButtonLayout)
+        self.runContentLayout.addWidget(self.runLogsBox)
 
         self.contentWidget = QWidget()
         self.contentLayout = QVBoxLayout(self.contentWidget)
@@ -236,8 +243,8 @@ class HomePage(QWidget):
         self.contentLayout.addLayout(self.headLayout)
         self.contentLayout.addLayout(self.templateLayout)
         self.contentLayout.addLayout(self.tableLayout)
-        self.contentLayout.addWidget(self.outputBox)
-        self.contentLayout.addLayout(self.startButtonLayout)
+        self.contentLayout.addLayout(self.attachmentLayout)
+        self.contentLayout.addLayout(self.runContentLayout)
 
         self.scrollArea = SingleDirectionScrollArea(
             orient=Qt.Orientation.Vertical
@@ -254,64 +261,71 @@ class HomePage(QWidget):
 
         self.setLayout(self.mainLayout)
 
-    def loadEmailBody(
-        self, templateContentBox, clearTemplateButton, templatePicker
-    ):
-        filePath, _ = templatePicker.getOpenFileName()
-        if filePath:
-            with open(filePath, "r", encoding="utf-8") as file:
-                fileContent = file.read()
-                if filePath.endswith(".html"):
-                    templateContentBox.setHtml(fileContent)
-                else:
-                    templateContentBox.setText(fileContent)
-                clearTemplateButton.setDisabled(False)
+    def pickTemplateFile(self):
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        self.templateFileBox.setText(
+            dialog.getOpenFileName(self, "Select a template file!")[0]
+        )
 
-    def clearTemplate(self, templateContentBox, clearTemplateButton):
-        templateContentBox.clear()
-        clearTemplateButton.setDisabled(True)
+    def pickTableFile(self):
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        self.tableFileInput.setText(
+            dialog.getOpenFileName(
+                self, "Select a table file!", "", "Table (*.csv *.xlsx)"
+            )[0]
+        )
 
-    def selectFile(self, filePathLabel):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-        file_dialog.setNameFilters(SUPPORTED_TABLE_FORMATS)
-
-        if file_dialog.exec():
-            selected_files = file_dialog.selectedFiles()
-            if selected_files:
-                filePathLabel.setText(selected_files[0])
-
-    def clearSelectedFile(self, filePathLabel, clearButton):
-        filePathLabel.setText("No table file selected")
-        clearButton.setDisabled(True)
+    def pickAttachmentFolder(self):
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.FileMode.Directory)
+        dialog.setOption(QFileDialog.Option.ShowDirsOnly, True)
+        self.attachmentFolderInput.setText(
+            dialog.getExistingDirectory(
+                self,
+                "Select the directory to load table attachments from!",
+            )
+        )
 
     def runEmailer(self):
         """Runs the example logic for this page."""
         if self.worker is not None and self.worker.isRunning():
             return
 
-        if not self.templateContentBox.toPlainText():
-            InfoBar.error(
-                title="Template is empty!",
-                content="",
-                isClosable=True,
-                position=InfoBarPosition.TOP_RIGHT,
-                duration=4000,
-                parent=self,
-            )
-            return
+        schema = {
+            "SMTP Host": self.smtpHostInput.text(),
+            "SMTP Port": self.smtpPortInput.text(),
+            "SMTP Username": self.smtpUsernameInput.text(),
+            "SMTP Password": self.smtpPasswordInput.text(),
+            "Subject": self.subjectInput.text(),
+            "Table file": self.tableFileInput.text(),
+            "Attachment folder": self.attachmentFolderInput.text(),
+            "Template file": self.templateFileBox.text(),
+        }
+        for input in schema:
+            if not schema[input]:
+                InfoBar.error(
+                    title=f"{input} field is empty!",
+                    content="",
+                    isClosable=True,
+                    position=InfoBarPosition.TOP_RIGHT,
+                    duration=4000,
+                    parent=self,
+                )
+                return
 
-        self.startButton.setDisabled(True)
-        self.worker = EmailerThread(self.templateContentBox.toPlainText())
+        self.runButton.setDisabled(True)
+        self.worker = EmailerThread(self.templateFileBox.text())
         self.worker.outputSignal.connect(
             lambda text: (
-                self.outputBox.appendPlainText(text),
-                self.outputClearButton.setDisabled(False),
+                self.runLogsBox.appendPlainText(text),
+                self.runLogsClearButton.setDisabled(False),
             )
         )
 
         def finished():
-            self.startButton.setDisabled(False)
+            self.runButton.setDisabled(False)
             App.alert(self, 0)
             if (
                 App.applicationState()

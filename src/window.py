@@ -21,6 +21,7 @@ from pages.home import HomePage
 from pages.settings import SettingsPage
 from pages.help import HelpPage
 
+
 class Window(FluentWindow):
     def __init__(self):
         super().__init__()

@@ -32,6 +32,9 @@ class SettingsPage(QWidget):
             ],
         )
         self.comboBox.setMaximumWidth(500)
+        config.style.valueChanged.connect(
+            lambda mode: (qfluentwidgets.setTheme(mode))
+        )
 
         self.colorPicker = ColorSettingCard(
             config.color,
@@ -40,6 +43,9 @@ class SettingsPage(QWidget):
             "Change the primary color of the app.",
         )
         self.colorPicker.setMaximumWidth(500)
+        config.color.valueChanged.connect(
+            lambda color: (qfluentwidgets.setThemeColor(color))
+        )
 
         self.settingsLayout = FlowLayout()
         self.settingsLayout.addWidget(self.comboBox)
@@ -53,7 +59,7 @@ class SettingsPage(QWidget):
         self.dialog.yesButton.setText("Reset")
         self.dialog.cancelButton.setText("Cancel")
 
-        self.reset = PrimaryToolButton(FluentIcon.HISTORY)
+        self.reset = PrimaryToolButton(FluentIcon.DELETE)
         self.reset.setFixedWidth(100)
         self.reset.clicked.connect(
             lambda: (config.reset() if self.dialog.exec() else None)
