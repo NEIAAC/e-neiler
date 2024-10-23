@@ -14,7 +14,7 @@ from qfluentwidgets import (
     PrimaryToolButton,
     FluentIcon,
     SingleDirectionScrollArea,
-    PlainTextEdit,
+    TextBrowser,
     InfoBar,
     InfoBarPosition,
 )
@@ -35,7 +35,7 @@ class HomePage(QWidget):
         self.finishSound.setSource(
             QUrl.fromLocalFile(loader.resources("sounds/success.wav"))
         )
-        self.finishSound.setVolume(0.2)
+        self.finishSound.setVolume(0.1)
 
         self.smtpHostInput = LineEdit()
         self.smtpHostInput.setMaximumWidth(500)
@@ -115,14 +115,14 @@ class HomePage(QWidget):
         self.ccInput = LineEdit()
         self.ccInput.setMaximumWidth(500)
         self.ccInput.setPlaceholderText(
-            "Use a comma (,) to separate emails you want to CC!"
+            "Use a comma , to separate emails you want to CC!"
         )
         self.ccLabel = BodyLabel("CC")
 
         self.bccInput = LineEdit()
         self.bccInput.setMaximumWidth(500)
         self.bccInput.setPlaceholderText(
-            "Use a comma (,) to separate emails you want to BCC!"
+            "Use a comma , to separate emails you want to BCC!"
         )
         self.bccLabel = BodyLabel("BCC")
 
@@ -201,7 +201,8 @@ class HomePage(QWidget):
         self.attachmentLayout.addWidget(self.attachmentLabel)
         self.attachmentLayout.addLayout(self.attachmentContentLayout)
 
-        self.runLogsBox = PlainTextEdit()
+        self.runLogsBox = TextBrowser()
+        self.runLogsBox.setHtml("")
         self.runLogsBox.setMinimumHeight(150)
         self.runLogsBox.setReadOnly(True)
         self.runLogsBox.setPlaceholderText(
@@ -316,13 +317,28 @@ class HomePage(QWidget):
                 return
 
         self.runButton.setDisabled(True)
-        self.worker = EmailerThread(self.templateFileBox.text())
-        self.worker.outputSignal.connect(
-            lambda text: (
-                self.runLogsBox.appendPlainText(text),
-                self.runLogsClearButton.setDisabled(False),
-            )
+
+        self.worker = EmailerThread(
+            self.smtpHostInput.text(),
+            self.smtpPortInput.text(),
+            self.smtpUsernameInput.text(),
+            self.smtpPasswordInput.text(),
+            self.subjectInput.text(),
+            self.ccInput.text(),
+            self.bccInput.text(),
+            self.templateFileBox.text(),
+            self.tableFileInput.text(),
+            self.attachmentFolderInput.text(),
         )
+
+        def output(text, level):
+            if level == "ERROR":
+                self.runLogsBox.append(f'<font color="red">{text}</font>')
+            else:
+                self.runLogsBox.append(f'<font color="green">{text}</font>')
+            self.runLogsClearButton.setDisabled(False)
+
+        self.worker.outputSignal.connect(output)
 
         def finished():
             self.runButton.setDisabled(False)
