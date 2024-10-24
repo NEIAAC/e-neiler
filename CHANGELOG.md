@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/NEIAAC/e-neiler/compare/v2.1.1...v3.0.0) (2024-10-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* add graphical user interface ([#10](https://github.com/NEIAAC/e-neiler/issues/10))
+
+### Features
+
+* add graphical user interface ([#10](https://github.com/NEIAAC/e-neiler/issues/10)) ([771dc04](https://github.com/NEIAAC/e-neiler/commit/771dc043e9d97937007a9315e031d16f73364ace))
+
 ## [2.1.1](https://github.com/NEIAAC/e-neiler/compare/v2.1.0...v2.1.1) (2024-09-21)
 
 
