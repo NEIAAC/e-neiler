@@ -1,6 +1,7 @@
 # IDE
 .idea/
 .vscode/
+xcuserdata/
 
 # Environment
 .env*
@@ -13,17 +14,22 @@ venv.bak/
 !.env.example
 
 # Cache
+*_cache
 __pycache__/
 *.py[cod]
 *$py.class
 
 # Build
-.Python
+*.exe
+*-build
+*-dist
+*.build
+*.dist
 build/
-develop-eggs/
 dist/
 output/
 out/
+deployment/
 downloads/
 eggs/
 .eggs/
@@ -37,12 +43,16 @@ wheels/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
+develop-eggs/
 *.egg
+.Python
+
 MANIFEST
 
 # Logs
 pip-log.txt
 pip-delete-this-directory.txt
+nuitka-crash-report.xml
 
 # Testing
 htmlcov/
@@ -60,6 +70,7 @@ coverage.xml
 cover/
 
 # Miscellaneous
+.DS_Store
 *.mo
 *.pot
 *.log

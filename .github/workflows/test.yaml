@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request_target:
+
+jobs:
+  e2e:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
+    env:
+      DISPLAY: ":99.0"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - uses: tlambert03/setup-qt-libs@v1
+      - if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: sudo apt-get install pulseaudio -y
+      - name: Install dependencies
+        run: pip install .[test]
+      - name: Run PyTests
+        run: pytest

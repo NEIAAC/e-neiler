@@ -1,0 +1,38 @@
+[project]
+
+name = "e-neiler"
+version = "2.1.1"
+description = "Fully customizable SMTP e-mailer desktop app."
+dependencies = [
+    "pyside6==6.7.3",
+    "pyside6-fluent-widgets==1.6.6",
+    "pandas===2.2.2",
+    "html2text==2024.2.26",
+    "loguru===0.7.2",
+]
+
+[project.optional-dependencies]
+
+check = ["ruff==0.6.9", "pre-commit==4.0.1"]
+test = ["pytest==8.3.3", "pytest-qt==4.4.0", "pytest-xvfb==3.0.0"]
+build = ["nuitka==2.4.8", "imageio==2.36.0"]
+
+[tool.ruff]
+line-length = 80
+indent-width = 4
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+qt_qapp_name = "Test"
+addopts = "-ra"
+testpaths = ["test"]
+python_files = ["*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["*Test", "test*"]

@@ -1,61 +1,81 @@
 # Quick and reliable ✉️➡️
 
-E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
+E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works can connect to your custom mail server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
 
 ## Requirements 📋
 
-- Python 3.10.0+
+- Python 3.12.0+
 
 ## Usage 🚀
 
-- Clone the repository:
+- Go to the `Releases` page of the GitHub repository.
 
-  ```shell
-  git clone https://github.com/NEIAAC/e-neiler.git
-  ```
+- Under the `Assets` section for the latest release, click the entry with the name of your operating system.
+
+- After downloading, extract the top content from the `.zip` to anywhere you want.
+
+  ### Windows
+
+  - Run the `main.exe` file inside the extracted folder, you can create a shortcut with any name you like for this file.
+
+  ### Linux
+
+  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
+
+  ### MacOS
+
+  - Run the bundle installer extracted from the `.zip` file.
+
+- Detailed usage instructions can be found in the [wiki](https://github.com/NEIAAC/e-neiler/wiki) page.
+
+- See the [example](./example/) directory for demo files.
+
+## Development 🛠️
+
+- Clone the repository and open a terminal **inside** it.
 
 - Install the dependencies:
 
   ```shell
-  pip install -r requirements.txt
+  # It is it recommend that a virtual environment is set before doing this!
+
+  pip install .
   ```
 
-- Create a `.env` file based on the provided `.env.example` file, with attention to the notes on each variable.
-
-- Edit the `template.txt` file in the `data` folder to contain the appropriate email content or even change it to a `.html` file.
-
-- Edit the `table.csv` file in the `data` folder, or add your own, with the appropriate recipient emails, placeholder replacements and file attatchment paths, depending on what is needed.
-
-- Map placeholders and files to the values that will be read from the CSV in this section of the `main.py` file:
-
-  ```python
-  #-------------CONFIGURATION-------------#
-
-  message["To"] = row[0]
-
-  # Most clients will ignore this and set it as the sender address automatically
-  message["From"] = "NEIAAC"
-
-  message["Subject"] = "Your NEIAAC example workshop certificate!"
-
-  # CC and BCC are optional
-  message["Cc"] = prepare_copy([""])
-  message ["Bcc"] = prepare_copy(["sample@example.com", "fake@example.com"])
-
-  # Replace template placeholders with values from the CSV
-  body = message_template.substitute(
-      NAME=row[1]
-  )
-
-  # Repeat appends to this list for multiple files or comment/remove them if no files are needed
-  file_paths: list[str] = []
-  file_paths.append(row[2])
-
-  #---------------------------------------#
-  ```
-
-- Run the script:
+- Start the app:
 
   ```shell
-  python main.py
+  python src/main.py
   ```
+
+## Tooling 🧰
+
+- Ruff is used as a linter and formatter:
+
+  ```shell
+  pip install .[check]
+  ruff check --fix
+  ruff format
+
+  # To automatically lint and format on every commit install the pre-commit hooks:
+  pre-commit install
+
+  # Note that when using pre-commit the git command will fail if any files are lint fixed or formatted.
+  # You will have to add the changed files to the staged area and commit again to apply the changes.
+  ```
+
+- PyTest and PyTest-Qt are used for testing:
+
+  ```shell
+  pip install .[test]
+  pytest
+  ```
+
+- Nuitka is used for cross-compiling to all supported platforms:
+
+  ```shell
+  pip install .[build]
+  nuitka <options>
+  ```
+
+  See the build [workflow](./.github/workflows/build.yaml) for a list of options used for each platform.
