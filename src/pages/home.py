@@ -44,7 +44,7 @@ class HomePage(QWidget):
         self.smtpHostInput.textChanged.connect(
             lambda text: config.smtpHost.set(text)
         )
-        self.smtphostLabel = BodyLabel("SMTP HOST*")
+        self.smtphostLabel = BodyLabel("<b>SMTP HOST</b>")
 
         self.smtpPortInput = LineEdit()
         self.smtpPortInput.setMaximumWidth(500)
@@ -52,7 +52,7 @@ class HomePage(QWidget):
         self.smtpPortInput.textChanged.connect(
             lambda text: config.smtpPort.set(text)
         )
-        self.smtpPortLabel = BodyLabel("SMTP PORT*")
+        self.smtpPortLabel = BodyLabel("<b>SMTP PORT</b>")
 
         self.smtpHostInputLayout = QVBoxLayout()
         self.smtpHostInputLayout.setSpacing(10)
@@ -75,7 +75,7 @@ class HomePage(QWidget):
         self.smtpUsernameInput.textChanged.connect(
             lambda text: config.smtpUsername.set(text)
         )
-        self.smtpusernameLabel = BodyLabel("SMTP USERNAME*")
+        self.smtpusernameLabel = BodyLabel("<b>SMTP USERNAME</b>")
 
         self.smtpUsernameLayout = QVBoxLayout()
         self.smtpUsernameLayout.setSpacing(10)
@@ -88,7 +88,7 @@ class HomePage(QWidget):
         self.smtpPasswordInput.textChanged.connect(
             lambda text: config.smtpPassword.set(text)
         )
-        self.smtppasswordLabel = BodyLabel("SMTP PASSWORD*")
+        self.smtppasswordLabel = BodyLabel("<b>SMTP PASSWORD</b>")
 
         self.smtpPasswordLayout = QVBoxLayout()
         self.smtpPasswordLayout.setSpacing(10)
@@ -105,7 +105,7 @@ class HomePage(QWidget):
         self.smtpLayout.addLayout(self.smtpServerLayout)
         self.smtpLayout.addLayout(self.smtpAuthLayout)
 
-        self.subjectLabel = BodyLabel("SUBJECT*")
+        self.subjectLabel = BodyLabel("<b>SUBJECT</b>")
         self.subjectInput = LineEdit()
         self.subjectInput.setPlaceholderText(
             "The title of the email goes here."
@@ -117,14 +117,14 @@ class HomePage(QWidget):
         self.ccInput.setPlaceholderText(
             "Use a comma , to separate emails you want to CC!"
         )
-        self.ccLabel = BodyLabel("CC")
+        self.ccLabel = BodyLabel("<b>CC</b>")
 
         self.bccInput = LineEdit()
         self.bccInput.setMaximumWidth(500)
         self.bccInput.setPlaceholderText(
             "Use a comma , to separate emails you want to BCC!"
         )
-        self.bccLabel = BodyLabel("BCC")
+        self.bccLabel = BodyLabel("<b>BCC</b>")
 
         self.headLayout = QVBoxLayout()
         self.headLayout.setSpacing(10)
@@ -135,7 +135,7 @@ class HomePage(QWidget):
         self.headLayout.addWidget(self.bccLabel)
         self.headLayout.addWidget(self.bccInput)
 
-        self.templateLabel = BodyLabel("TEMPLATE FILE*")
+        self.templateLabel = BodyLabel("<b>TEMPLATE FILE</b>")
         self.templatePicker = QFileDialog()
         self.templatePicker.setFileMode(QFileDialog.FileMode.ExistingFile)
 
@@ -158,7 +158,7 @@ class HomePage(QWidget):
         self.templateLayout.addWidget(self.templateLabel)
         self.templateLayout.addLayout(self.templateContentLayout)
 
-        self.tableLabel = BodyLabel("TABLE FILE*")
+        self.tableLabel = BodyLabel("<b>TABLE FILE</b>")
         self.tableFileInput = LineEdit()
         self.tableFileInput.setReadOnly(True)
         self.tableFileInput.setMaximumWidth(500)
@@ -178,7 +178,7 @@ class HomePage(QWidget):
         self.tableLayout.addWidget(self.tableLabel)
         self.tableLayout.addLayout(self.tableContentLayout)
 
-        self.attachmentLabel = BodyLabel("ATTACHMENTS DIRECTORY*")
+        self.attachmentLabel = BodyLabel("<b>ATTACHMENTS DIRECTORY</b>")
         self.attachmentFolderInput = LineEdit()
         self.attachmentFolderInput.setReadOnly(True)
         self.attachmentFolderInput.setMaximumWidth(500)
@@ -206,7 +206,9 @@ class HomePage(QWidget):
         self.runLogsBox.setMinimumHeight(150)
         self.runLogsBox.setReadOnly(True)
         self.runLogsBox.setPlaceholderText(
-            "Press the button on the left to start.\nLog output from the run will be shown here."
+            "Press the start button on the left to begin. \
+            \nLog output from the run will be shown here. \
+            \nThe trash can button will clear this box."
         )
 
         self.worker = None
@@ -306,7 +308,7 @@ class HomePage(QWidget):
         for input in schema:
             if not schema[input]:
                 InfoBar.error(
-                    title=f"{input} field is empty!",
+                    title=f"{input} field cannot be empty!",
                     content="",
                     isClosable=True,
                     position=InfoBarPosition.TOP_RIGHT,

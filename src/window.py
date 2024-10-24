@@ -41,7 +41,10 @@ class Window(FluentWindow):
 
         self.addSubInterface(HomePage(), FluentIcon.HOME, "Home")
         self.addSubInterface(
-            HelpPage(), FluentIcon.HELP, "Help", NavigationItemPosition.BOTTOM
+            HelpPage(),
+            FluentIcon.DICTIONARY,
+            "Guide",
+            NavigationItemPosition.BOTTOM,
         )
         self.addSubInterface(
             SettingsPage(),
