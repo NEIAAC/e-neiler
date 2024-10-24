@@ -1,6 +1,6 @@
 # Quick and reliable ✉️➡️
 
-E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works on your custom server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
+E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works can connect to your custom mail server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
 
 ## Requirements 📋
 
@@ -14,17 +14,21 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
 - After downloading, extract the top content from the `.zip` to anywhere you want.
 
-### Windows
+  ### Windows
 
-- Run the `main.exe` file inside the extracted folder, you can create a shortcut with any name you like for this file.
+  - Run the `main.exe` file inside the extracted folder, you can create a shortcut with any name you like for this file.
 
-### Linux
+  ### Linux
 
-- Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
+  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
 
-### MacOS
+  ### MacOS
 
-- Run the bundle installer extracted from the `.zip` file.
+  - Run the bundle installer extracted from the `.zip` file.
+
+- Detailed usage instructions can be found in the [wiki](https://github.com/NEIAAC/e-neiler/wiki) page.
+
+- See the [example](./example/) directory for demo files.
 
 ## Development 🛠️
 

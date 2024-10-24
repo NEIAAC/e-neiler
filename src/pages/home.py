@@ -114,16 +114,10 @@ class HomePage(QWidget):
 
         self.ccInput = LineEdit()
         self.ccInput.setMaximumWidth(500)
-        self.ccInput.setPlaceholderText(
-            "Use a comma , to separate emails you want to CC!"
-        )
         self.ccLabel = BodyLabel("<b>CC</b>")
 
         self.bccInput = LineEdit()
         self.bccInput.setMaximumWidth(500)
-        self.bccInput.setPlaceholderText(
-            "Use a comma , to separate emails you want to BCC!"
-        )
         self.bccLabel = BodyLabel("<b>BCC</b>")
 
         self.headLayout = QVBoxLayout()
@@ -135,30 +129,30 @@ class HomePage(QWidget):
         self.headLayout.addWidget(self.bccLabel)
         self.headLayout.addWidget(self.bccInput)
 
-        self.templateLabel = BodyLabel("<b>TEMPLATE FILE</b>")
-        self.templatePicker = QFileDialog()
-        self.templatePicker.setFileMode(QFileDialog.FileMode.ExistingFile)
+        self.bodyLabel = BodyLabel("<b>BODY FILE</b>")
+        self.bodyPicker = QFileDialog()
+        self.bodyPicker.setFileMode(QFileDialog.FileMode.ExistingFile)
 
-        self.templateFileBox = LineEdit()
-        self.templateFileBox.setMaximumWidth(500)
-        self.templateFileBox.setReadOnly(True)
-        self.templateFileBox.setPlaceholderText("No template file selected.")
+        self.bodyFileBox = LineEdit()
+        self.bodyFileBox.setMaximumWidth(500)
+        self.bodyFileBox.setReadOnly(True)
+        self.bodyFileBox.setPlaceholderText("No body file selected.")
 
-        self.templateFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
-        self.templateFilePickButton.clicked.connect(self.pickTemplateFile)
+        self.bodyFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
+        self.bodyFilePickButton.clicked.connect(self.pickBodyFile)
 
-        self.templateContentLayout = QHBoxLayout()
-        self.templateContentLayout.setSpacing(10)
-        self.templateContentLayout.addWidget(self.templateFilePickButton)
-        self.templateContentLayout.addWidget(self.templateFileBox)
+        self.bodyContentLayout = QHBoxLayout()
+        self.bodyContentLayout.setSpacing(10)
+        self.bodyContentLayout.addWidget(self.bodyFilePickButton)
+        self.bodyContentLayout.addWidget(self.bodyFileBox)
 
-        self.templateLayout = QVBoxLayout()
-        self.templateLayout.setSpacing(10)
-        self.templateLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.templateLayout.addWidget(self.templateLabel)
-        self.templateLayout.addLayout(self.templateContentLayout)
+        self.bodyLayout = QVBoxLayout()
+        self.bodyLayout.setSpacing(10)
+        self.bodyLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.bodyLayout.addWidget(self.bodyLabel)
+        self.bodyLayout.addLayout(self.bodyContentLayout)
 
-        self.tableLabel = BodyLabel("<b>TABLE FILE</b>")
+        self.tableLabel = BodyLabel("<b>VARIABLE TABLE FILE</b>")
         self.tableFileInput = LineEdit()
         self.tableFileInput.setReadOnly(True)
         self.tableFileInput.setMaximumWidth(500)
@@ -244,7 +238,7 @@ class HomePage(QWidget):
         self.contentLayout.setSpacing(40)
         self.contentLayout.addLayout(self.smtpLayout)
         self.contentLayout.addLayout(self.headLayout)
-        self.contentLayout.addLayout(self.templateLayout)
+        self.contentLayout.addLayout(self.bodyLayout)
         self.contentLayout.addLayout(self.tableLayout)
         self.contentLayout.addLayout(self.attachmentLayout)
         self.contentLayout.addLayout(self.runContentLayout)
@@ -264,11 +258,11 @@ class HomePage(QWidget):
 
         self.setLayout(self.mainLayout)
 
-    def pickTemplateFile(self):
+    def pickBodyFile(self):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.templateFileBox.setText(
-            dialog.getOpenFileName(self, "Select a template file!")[0]
+        self.bodyFileBox.setText(
+            dialog.getOpenFileName(self, "Select a body file!")[0]
         )
 
     def pickTableFile(self):
@@ -303,7 +297,7 @@ class HomePage(QWidget):
             "Subject": self.subjectInput.text(),
             "Table file": self.tableFileInput.text(),
             "Attachment folder": self.attachmentFolderInput.text(),
-            "Template file": self.templateFileBox.text(),
+            "Body file": self.bodyFileBox.text(),
         }
         for input in schema:
             if not schema[input]:
@@ -327,7 +321,7 @@ class HomePage(QWidget):
             self.subjectInput.text(),
             self.ccInput.text(),
             self.bccInput.text(),
-            self.templateFileBox.text(),
+            self.bodyFileBox.text(),
             self.tableFileInput.text(),
             self.attachmentFolderInput.text(),
         )

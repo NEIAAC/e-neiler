@@ -95,21 +95,21 @@ class EmailerThread(QThread):
                 return
 
             try:
-                template = self.readTemplate()
-                self.output("Body template loaded")
+                body = self.readTemplate()
             except Exception as e:
-                self.output(f"Failed to load body template: {e}", "ERROR")
+                self.output(f"Failed to load body: {e}", "ERROR")
                 return
-            logger.info(f"Body template read: {template}")
+            logger.info(f"Body loaded: {body}")
+            logger.info(f"Body read: {body}")
 
             try:
                 rows, cols = self.readTable()
-                self.output(
-                    f"Table loaded, found {len(rows)} {len(rows) == 1 and 'row' or 'rows'}"
-                )
             except Exception as e:
                 self.output(f"Failed to load table: {e}", "ERROR")
                 return
+            logger.info(
+                f"Table loaded, found {len(rows)} {len(rows) == 1 and 'row' or 'rows'}"
+            )
             logger.info(f"Table columns read: {cols}")
             logger.info(f"Table rows read: {rows}")
 
@@ -117,20 +117,28 @@ class EmailerThread(QThread):
                 self.output("Given table is empty", "ERROR")
                 return
 
-            try:
-                body = template.substitute(rows[0])
-            except KeyError as e:
-                self.output(
-                    f"[{total}] Template key {e} not found in table headers",
-                    "ERROR",
-                )
-                return
-            except TypeError as e:
-                self.output(
-                    f"[{total}] Template key {e} found more than once in table headers",
-                    "ERROR",
-                )
-                return
+            variableInputs = {
+                "Subject": self.subject,
+                "CC": self.cc,
+                "BCC": self.bcc,
+                "Body": self.attachmentDir,
+            }
+            # Validate that all variable inputs are present in the table headers
+            for key, value in variableInputs.items():
+                try:
+                    Template(value).substitute(rows[0])
+                except KeyError as e:
+                    self.output(
+                        f"{key} variable not found in table headers: {e}",
+                        "ERROR",
+                    )
+                    return
+                except TypeError as e:
+                    self.output(
+                        f"{key} variable found more than once in table headers: {e}",
+                        "ERROR",
+                    )
+                    return
 
             server = smtplib.SMTP(host=self.smtpHost, port=self.smtpPort)
 
@@ -161,28 +169,19 @@ class EmailerThread(QThread):
                 # Configure email headers
                 message["To"] = row[cols[0]].strip()
                 message["From"] = self.smtpUsername
-                message["Subject"] = self.subject
-                message["Cc"] = self.cc
-                message["Bcc"] = self.bcc
-
-                # Get email body from replacing keys in template
-                try:
-                    body = template.substitute(row)
-                except KeyError as e:
-                    self.output(
-                        f"[{total}] Template key {e} not found in table headers",
-                        "ERROR",
-                    )
-                    break
+                message["Subject"] = Template(self.subject).substitute(row)
+                message["Cc"] = Template(self.cc).substitute(row)
+                message["Bcc"] = Template(self.bcc).substitute(row)
 
                 # Add body to email
+                content = body.substitute(row)
                 if self.templatePath.endswith(".html"):
-                    message.set_content(html2text.html2text(body))
-                    message.add_alternative(body, subtype="html")
+                    message.set_content(html2text.html2text(content))
+                    message.add_alternative(content, subtype="html")
                 else:
-                    message.set_content(body)
+                    message.set_content(content)
 
-                # Get attachments from joining given directory + filePaths column
+                # Add attachments to email
                 filePaths: list[str] = []
                 if row[cols[1]]:
                     attachmentNames = row[cols[1]].split(",")
@@ -191,8 +190,6 @@ class EmailerThread(QThread):
                             self.attachmentDir, attachmentName
                         )
                         filePaths.append(fullPath)
-
-                # Add attachments to email
                 try:
                     for filePath in filePaths:
                         file, mainType, subType = self.readAttachment(filePath)

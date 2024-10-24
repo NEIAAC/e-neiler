@@ -13,4 +13,3 @@ DATA_PATH = os.path.join(
     AUTHOR_NAME,
     EXECUTABLE_NAME,
 )
-SUPPORTED_TABLE_FORMATS = ["csv", "xlsx"]
