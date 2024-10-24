@@ -2,17 +2,13 @@
 
 E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works can connect to your custom mail server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
 
-## Requirements 📋
-
-- Python 3.12.0+
-
 ## Usage 🚀
 
-- Go to the `Releases` page of the GitHub repository.
+- Go to the [latest release](https://github.com/NEIAAC/e-neiler/releases/latest) page.
 
-- Under the `Assets` section for the latest release, click the entry with the name of your operating system.
+- Under the `Assets` section, click the entry with the name of your operating system to start the download.
 
-- After downloading, extract the top content from the `.zip` to anywhere you want.
+- After downloading, extract the top-level content from the `.zip` to anywhere you want.
 
   ### Windows
 
@@ -20,11 +16,13 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
   ### Linux
 
-  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
+  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional steps.
 
   ### MacOS
 
-  - Run the bundle installer extracted from the `.zip` file.
+  - Run the bundle installer extracted from the `.zip` file.~
+
+- Depending on your operating system, you _may_ get a **security warning** due to the app not being signed. You can **safely ignore it** as our builds are automated from the open sourced codebase.
 
 - Detailed usage instructions can be found in the [wiki](https://github.com/NEIAAC/e-neiler/wiki) page.
 
@@ -33,6 +31,10 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 ## Development 🛠️
 
 - Clone the repository and open a terminal **inside** it.
+
+  ### Requirements 📋
+
+  - Python 3.12.0+
 
 - Install the dependencies:
 
