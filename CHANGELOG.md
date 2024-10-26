@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/NEIAAC/e-neiler/compare/v3.0.1...v3.0.2) (2024-10-26)
+
+
+### Bug Fixes
+
+* improve dev process ([4601aea](https://github.com/NEIAAC/e-neiler/commit/4601aea1889d2214073eb55cecc26af8a907a6e8))
+
 ## [3.0.1](https://github.com/NEIAAC/e-neiler/compare/v3.0.0...v3.0.1) (2024-10-24)
 
 
