@@ -86,6 +86,7 @@ class EmailerThread(QThread):
         inputs = self.__dict__.copy()
         inputs.pop("smtpPassword")
         logger.info(f"Starting emailer thread with input parameters: {inputs}")
+        self.output("...")
         with logger.catch():
             if not os.path.isdir(self.attachmentDir):
                 self.output(

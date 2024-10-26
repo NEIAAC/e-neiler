@@ -134,8 +134,16 @@ class HomePage(QWidget):
         self.bodyFileInput.setMaximumWidth(500)
         self.bodyFileInput.setReadOnly(True)
         self.bodyFileInput.setPlaceholderText("No body file selected.")
+        self.bodyFileDialog = QFileDialog()
+        self.bodyFileDialog.setFileMode(QFileDialog.FileMode.ExistingFile)
         self.bodyFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
-        self.bodyFilePickButton.clicked.connect(self.pickBodyFile)
+        self.bodyFilePickButton.clicked.connect(
+            lambda: self.bodyFileInput.setText(
+                self.bodyFileDialog.getOpenFileName(
+                    self, "Select a body file!"
+                )[0]
+            )
+        )
         self.bodyContentLayout = QHBoxLayout()
         self.bodyContentLayout.setSpacing(10)
         self.bodyContentLayout.addWidget(self.bodyFilePickButton)
@@ -151,8 +159,16 @@ class HomePage(QWidget):
         self.tableFileInput.setReadOnly(True)
         self.tableFileInput.setMaximumWidth(500)
         self.tableFileInput.setPlaceholderText("No table file selected.")
+        self.tableFileDialog = QFileDialog()
+        self.tableFileDialog.setFileMode(QFileDialog.FileMode.ExistingFile)
         self.tableFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
-        self.tableFilePickButton.clicked.connect(self.pickTableFile)
+        self.tableFilePickButton.clicked.connect(
+            lambda: self.tableFileInput.setText(
+                self.tableFileDialog.getOpenFileName(
+                    self, "Select a table file!"
+                )[0]
+            )
+        )
         self.tableContentLayout = QHBoxLayout()
         self.tableContentLayout.setSpacing(10)
         self.tableContentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -170,9 +186,15 @@ class HomePage(QWidget):
         self.attachmentFolderInput.setPlaceholderText(
             "No attachment folder selected."
         )
+        self.attachmentFileDialog = QFileDialog()
+        self.attachmentFileDialog.setFileMode(QFileDialog.FileMode.Directory)
         self.attachmentFolderPickButton = PrimaryToolButton(FluentIcon.FOLDER)
         self.attachmentFolderPickButton.clicked.connect(
-            self.pickAttachmentFolder
+            lambda: self.attachmentFolderInput.setText(
+                self.attachmentFileDialog.getExistingDirectory(
+                    self, "Select the directory to load table attachments from!"
+                )
+            )
         )
         self.attachmentContentLayout = QHBoxLayout()
         self.attachmentContentLayout.setSpacing(10)
@@ -244,33 +266,6 @@ class HomePage(QWidget):
 
         self.setLayout(self.mainLayout)
 
-    def pickBodyFile(self):
-        dialog = QFileDialog()
-        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.bodyFileInput.setText(
-            dialog.getOpenFileName(self, "Select a body file!")[0]
-        )
-
-    def pickTableFile(self):
-        dialog = QFileDialog()
-        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.tableFileInput.setText(
-            dialog.getOpenFileName(
-                self, "Select a table file!", "", "Table (*.csv *.xlsx)"
-            )[0]
-        )
-
-    def pickAttachmentFolder(self):
-        dialog = QFileDialog()
-        dialog.setFileMode(QFileDialog.FileMode.Directory)
-        dialog.setOption(QFileDialog.Option.ShowDirsOnly, True)
-        self.attachmentFolderInput.setText(
-            dialog.getExistingDirectory(
-                self,
-                "Select the directory to load table attachments from!",
-            )
-        )
-
     def runEmailer(self):
         """Runs the emailer logic for this page."""
 
@@ -337,6 +332,3 @@ class HomePage(QWidget):
 
         self.worker.finished.connect(finished)
         self.worker.start()
-
-
-#
