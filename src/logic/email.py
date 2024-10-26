@@ -56,8 +56,7 @@ class EmailerThread(QThread):
         elif self.tablePath.endswith(".xlsx"):
             table = pd.read_excel(self.tablePath, index_col=False)
         else:
-            self.output("Table data file type extension not supported", "ERROR")
-            raise ValueError("Unsupported file format")
+            raise ValueError("Unsupported file extension")
 
         records = table.to_dict("records")
         headers = list(table.columns)
