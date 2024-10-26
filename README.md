@@ -8,19 +8,19 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
 - ### Windows 🪟
 
-  - Use this [link](https://github.com/NEIAAC/python-gui-template/releases/latest/Windows.zip) to start the download.
+  - Use this [link](https://github.com/NEIAAC/e-neiler/releases/latest/download/Windows.zip) to start the download.
 
   - Run the `main.exe` file inside the extracted folder, you can create a shortcut with any name you like for this file.
 
 - ### Linux 🐧
 
-  - Use this [link](https://github.com/NEIAAC/python-gui-template/releases/latest/Linux.zip) to start the download.
+  - Use this [link](https://github.com/NEIAAC/e-neiler/releases/latest/download/Linux.zip) to start the download.
 
   - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
 
 - ### MacOS 🍎
 
-  - Use this [link](https://github.com/NEIAAC/python-gui-template/releases/latest/MacOS.zip) to start the download.
+  - Use this [link](https://github.com/NEIAAC/e-neiler/releases/latest/download/MacOS.zip) to start the download.
 
   - Run the bundle installer extracted from the `.zip` file.
 
