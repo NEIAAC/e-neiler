@@ -11,13 +11,14 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.conda/
 !.env.example
 
 # Cache
+*$py.class
+*.py[cod]
 *_cache
 __pycache__/
-*.py[cod]
-*$py.class
 
 # Build
 *.exe
