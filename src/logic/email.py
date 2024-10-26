@@ -25,9 +25,9 @@ class EmailerThread(QThread):
         subject: str,
         cc: str,
         bcc: str,
-        templatePath: str,
+        bodyPath: str,
         tablePath: str,
-        attachmentDir: str,
+        attachmentPath: str,
     ):
         super().__init__()
         self.smtpHost = smtpHost
@@ -37,17 +37,17 @@ class EmailerThread(QThread):
         self.subject = subject
         self.cc = cc
         self.bcc = bcc
-        self.templatePath = templatePath
+        self.bodyPath = bodyPath
         self.tablePath = tablePath
-        self.attachmentDir = attachmentDir
+        self.attachmentPath = attachmentPath
 
     def output(self, text: str, level: str = "INFO"):
         logger.log(level, text)
         self.outputSignal.emit(text, level)
 
-    def readTemplate(self) -> Template:
-        with open(self.templatePath, "r", encoding="utf-8") as templateFile:
-            content = templateFile.read()
+    def readBody(self) -> Template:
+        with open(self.bodyPath, "r", encoding="utf-8") as bodyFile:
+            content = bodyFile.read()
         return Template(content)
 
     def readTable(self) -> tuple[list[Dict[str, str]], list[str]]:
@@ -88,15 +88,15 @@ class EmailerThread(QThread):
         logger.info(f"Starting emailer thread with input parameters: {inputs}")
         self.output("...")
         with logger.catch():
-            if not os.path.isdir(self.attachmentDir):
+            if not os.path.isdir(self.attachmentPath):
                 self.output(
-                    f"Attachment directory {self.attachmentDir} not found or is not a directory",
+                    f"Attachment directory {self.attachmentPath} not found or is not a directory",
                     "ERROR",
                 )
                 return
 
             try:
-                body = self.readTemplate()
+                body = self.readBody()
             except Exception as e:
                 self.output(f"Failed to load body: {e}", "ERROR")
                 return
@@ -122,7 +122,7 @@ class EmailerThread(QThread):
                 "Subject": self.subject,
                 "CC": self.cc,
                 "BCC": self.bcc,
-                "Body": self.attachmentDir,
+                "Body": self.attachmentPath,
             }
             # Validate that all variable inputs are present in the table headers
             for key, value in variableInputs.items():
@@ -176,7 +176,7 @@ class EmailerThread(QThread):
 
                 # Add body to email
                 content = body.substitute(row)
-                if self.templatePath.endswith(".html"):
+                if self.bodyPath.endswith(".html"):
                     message.set_content(html2text.html2text(content))
                     message.add_alternative(content, subtype="html")
                 else:
@@ -188,7 +188,7 @@ class EmailerThread(QThread):
                     attachmentNames = row[cols[1]].split(",")
                     for attachmentName in attachmentNames:
                         fullPath = os.path.join(
-                            self.attachmentDir, attachmentName
+                            self.attachmentPath, attachmentName
                         )
                         filePaths.append(fullPath)
                 try:
