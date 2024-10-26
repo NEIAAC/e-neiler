@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.3](https://github.com/NEIAAC/e-neiler/compare/v3.0.2...v3.0.3) (2024-10-26)
+
+
+### Bug Fixes
+
+* remove redundant function calls ([72865fd](https://github.com/NEIAAC/e-neiler/commit/72865fd6358bcbd1cfe4ba53849178459e28caa9))
+
 ## [3.0.2](https://github.com/NEIAAC/e-neiler/compare/v3.0.1...v3.0.2) (2024-10-26)
 
 
