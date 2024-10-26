@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
 from PySide6.QtCore import Qt
 import qfluentwidgets
 from qfluentwidgets import (
@@ -18,6 +18,19 @@ class SettingsPage(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("Settings")
+
+        self.dialog = Dialog(
+            "Are you sure you want to reset all settings?",
+            "Every value will return to its default if you proceed.",
+        )
+        self.dialog.setTitleBarVisible(False)
+        self.dialog.yesButton.setText("Reset")
+        self.dialog.cancelButton.setText("Cancel")
+        self.resetButton = PrimaryToolButton(FluentIcon.DELETE)
+        self.resetButton.setFixedWidth(100)
+        self.resetButton.clicked.connect(
+            lambda: (config.reset() if self.dialog.exec() else None)
+        )
 
         self.comboBox = ComboBoxSettingCard(
             config.style,
@@ -51,29 +64,12 @@ class SettingsPage(QWidget):
         self.settingsLayout.addWidget(self.comboBox)
         self.settingsLayout.addWidget(self.colorPicker)
 
-        self.dialog = Dialog(
-            "Are you sure you want to reset all settings?",
-            "Every value will return to its default if you proceed.",
-        )
-        self.dialog.setTitleBarVisible(False)
-        self.dialog.yesButton.setText("Reset")
-        self.dialog.cancelButton.setText("Cancel")
-
-        self.reset = PrimaryToolButton(FluentIcon.DELETE)
-        self.reset.setFixedWidth(100)
-        self.reset.clicked.connect(
-            lambda: (config.reset() if self.dialog.exec() else None)
-        )
-
-        self.resetLayout = QHBoxLayout()
-        self.resetLayout.addWidget(self.reset)
-
         self.contentWidget = QWidget()
         self.contentLayout = QVBoxLayout(self.contentWidget)
         self.contentLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.contentLayout.setContentsMargins(40, 40, 50, 40)
         self.contentLayout.setSpacing(40)
-        self.contentLayout.addLayout(self.resetLayout)
+        self.contentLayout.addWidget(self.resetButton)
         self.contentLayout.addLayout(self.settingsLayout)
 
         self.scrollArea = SingleDirectionScrollArea(
@@ -83,6 +79,7 @@ class SettingsPage(QWidget):
         self.scrollArea.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding
         )
+        self.scrollArea.horizontalScrollBar().setVisible(False)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.enableTransparentBackground()
 

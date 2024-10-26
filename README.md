@@ -4,23 +4,25 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
 ## Usage 🚀
 
-- Go to the [latest release](https://github.com/NEIAAC/e-neiler/releases/latest) page.
+- The app is automatically built by a pipeline with every release, so we provide **direct download links** for most operating systems.
 
-- Under the `Assets` section, click the entry with the name of your operating system to start the download.
+- ### Windows 🪟
 
-- After downloading, extract the top-level content from the `.zip` to anywhere you want.
-
-  ### Windows
+  - Use this [link](https://github.com/NEIAAC/python-gui-template/releases/latest/Windows.zip) to start the download.
 
   - Run the `main.exe` file inside the extracted folder, you can create a shortcut with any name you like for this file.
 
-  ### Linux
+- ### Linux 🐧
 
-  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional steps.
+  - Use this [link](https://github.com/NEIAAC/python-gui-template/releases/latest/Linux.zip) to start the download.
 
-  ### MacOS
+  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
 
-  - Run the bundle installer extracted from the `.zip` file.~
+- ### MacOS 🍎
+
+  - Use this [link](https://github.com/NEIAAC/python-gui-template/releases/latest/MacOS.zip) to start the download.
+
+  - Run the bundle installer extracted from the `.zip` file.
 
 - Depending on your operating system, you _may_ get a **security warning** due to the app not being signed. You can **safely ignore it** as our builds are automated from the open sourced codebase.
 
@@ -30,54 +32,56 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
 ## Development 🛠️
 
-- Clone the repository and open a terminal **inside** it.
-
-  ### Requirements 📋
+- ### Requirements 📋
 
   - Python 3.12.0+
 
-- Install the dependencies:
+- ### Setup ⚙️
 
-  ```shell
-  # It is it recommend that a virtual environment is set before doing this!
+  - Clone the repository and open a terminal **inside** it.
 
-  pip install .
-  ```
+  - Install the dependencies:
 
-- Start the app:
+    ```shell
+    # It is it recommend that a virtual environment is set before doing this!
 
-  ```shell
-  python src/main.py
-  ```
+    pip install .
+    ```
 
-## Tooling 🧰
+  - Start the app:
 
-- Ruff is used as a linter and formatter:
+    ```shell
+    python src/main.py
+    ```
 
-  ```shell
-  pip install .[check]
-  ruff check --fix
-  ruff format
+- ### Tooling 🧰
 
-  # To automatically lint and format on every commit install the pre-commit hooks:
-  pre-commit install
+  - Ruff is used as a linter and formatter:
 
-  # Note that when using pre-commit the git command will fail if any files are lint fixed or formatted.
-  # You will have to add the changed files to the staged area and commit again to apply the changes.
-  ```
+    ```shell
+    pip install .[check]
+    ruff check --fix
+    ruff format
 
-- PyTest and PyTest-Qt are used for testing:
+    # To automatically lint and format on every commit install the pre-commit hooks:
+    pre-commit install
 
-  ```shell
-  pip install .[test]
-  pytest
-  ```
+    # Note that when using pre-commit the git command will fail if any files are lint fixed or formatted.
+    # You will have to add the changed files to the staged area and commit again to apply the changes.
+    ```
 
-- Nuitka is used for cross-compiling to all supported platforms:
+  - PyTest and PyTest-Qt are used for testing:
 
-  ```shell
-  pip install .[build]
-  nuitka <options>
-  ```
+    ```shell
+    pip install .[test]
+    pytest
+    ```
 
-  See the build [workflow](./.github/workflows/build.yaml) for a list of options used for each platform.
+  - Nuitka is used for cross-compiling to all supported platforms:
+
+    ```shell
+    pip install .[build]
+    nuitka <options>
+    ```
+
+    See the build [workflow](./.github/workflows/build.yaml) for a list of options used for each platform.

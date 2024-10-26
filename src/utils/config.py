@@ -28,9 +28,7 @@ class ConfigItem(OptionsConfigItem):
 
 
 class Config(QConfig):
-    """
-    Global object for app options.
-    """
+    """Global object for app data."""
 
     maximized = ConfigItem("Window", "Maximized", False, BoolValidator())
     width = ConfigItem("Window", "Width", 500)

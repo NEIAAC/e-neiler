@@ -13,6 +13,8 @@ from utils.constants import (
 
 
 class App(QApplication):
+    """Base application class."""
+
     def __init__(self, argv: list[str]):
         super().__init__(argv)
 

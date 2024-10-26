@@ -37,15 +37,15 @@ jobs:
         uses: actions/download-artifact@v4
       - name: Zip build artifacts
         run: |
-          (cd ${{ needs.build.outputs.macos-artifact }} && zip -r ../${{ needs.build.outputs.macos-artifact }}.zip .)
-          (cd ${{ needs.build.outputs.linux-artifact }} && zip -r ../${{ needs.build.outputs.linux-artifact }}.zip .)
-          (cd ${{ needs.build.outputs.windows-artifact }} && zip -r ../${{ needs.build.outputs.windows-artifact }}.zip .)
+          (cd ${{ needs.build.outputs.macos-artifact }} && zip -r ../MacOS.zip .)
+          (cd ${{ needs.build.outputs.linux-artifact }} && zip -r ../Linux.zip .)
+          (cd ${{ needs.build.outputs.windows-artifact }} && zip -r ../Windows.zip .)
       - name: Append build artifacts to release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: >
           gh release upload ${{ needs.metadata.outputs.tag-name }}
-          ${{ needs.build.outputs.macos-artifact }}.zip#MacOS
-          ${{ needs.build.outputs.linux-artifact }}.zip#Linux
-          ${{ needs.build.outputs.windows-artifact }}.zip#Windows
+          MacOS.zip#MacOS
+          Linux.zip#Linux
+          Windows.zip#Windows
