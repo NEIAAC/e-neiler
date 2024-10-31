@@ -1,4 +1,4 @@
-EMAILS,ATTACHMENTS,NAME,OPTIONAL_EXTRA
+EMAIL,ATTACHMENTS,NAME,OPTIONAL_EXTRA
 bob@example.com,"certificate.pdf,invoice.pdf",Bob,
 alice@example.com,certificate.pdf,Alice,
 robert@example.com,certificate.pdf,Robert,
