@@ -283,7 +283,7 @@ class HomePage(QWidget):
             "Body file": self.bodyFileInput.text(),
         }
         for input in schema:
-            if not schema[input]:
+            if schema[input] is None or schema[input] == "":
                 InfoBar.error(
                     title=f"{input} field cannot be empty!",
                     content="",
