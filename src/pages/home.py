@@ -20,7 +20,7 @@ from qfluentwidgets import (
 )
 
 from app import App
-from logic.email import EmailerThread
+from services.email import EmailerThread
 from utils.config import config
 from utils import loader
 from utils.system_tray import SystemTray

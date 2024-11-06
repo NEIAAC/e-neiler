@@ -8,23 +8,32 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
 - ### Windows 🪟
 
-  - Use this [link](https://github.com/NEIAAC/e-neiler/releases/latest/download/Windows.zip) to start the download.
+  - [Click this link to start the download.](https://github.com/NEIAAC/e-neiler/releases/latest/download/Windows.zip)
 
-  - Run the `main.exe` file inside the extracted folder, you can create a shortcut with any name you like for this file.
+  - Start the `main.exe` file **inside** the extracted folder by _double clicking_ on it, you can create a shortcut with any name you like for this file.
+
+  - If you get a message from Windows with a warning that blocks the app from running, look for the **hidden** continue **button** and use it to **safely ignore** this warning.
 
 - ### Linux 🐧
 
-  - Use this [link](https://github.com/NEIAAC/e-neiler/releases/latest/download/Linux.zip) to start the download.
+  - [Use this link to start the download.](https://github.com/NEIAAC/e-neiler/releases/latest/download/Linux.zip)
 
-  - Run the `main.bin` file inside the extracted folder. Note that compilation is targeted at Ubuntu (Wayland), other distributions may need additional actions to run the app.
+  - Start the `main.bin` file **inside** the extracted folder, remember to **update the execution permissions** first by opening a terminal and running:
+
+      ```shell
+      chmod +x main.bin
+      ./main.bin
+      ```
+
+  - This binary has been successfully tested on Ubuntu and Arch with both the Wayland and X11 protocols, other setups may need additional tinkering.
 
 - ### MacOS 🍎
 
-  - Use this [link](https://github.com/NEIAAC/e-neiler/releases/latest/download/MacOS.zip) to start the download.
+  - [Use this link to start the download.](https://github.com/NEIAAC/e-neiler/releases/latest/download/MacOS.zip)
 
-  - Run the bundle installer extracted from the `.zip` file.
+  - Start the extracted bundle app by _clicking_ on it.
 
-- Depending on your operating system, you _may_ get a **security warning** due to the app not being signed. You can **safely ignore it** as our builds are automated from the open sourced codebase.
+  - If the app fails to open, go to [this support page](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac) and select your OS version at the top, then follow the instructions.
 
 - Detailed usage instructions can be found in the [wiki](https://github.com/NEIAAC/e-neiler/wiki) page.
 
