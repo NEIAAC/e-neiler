@@ -1,7 +1,7 @@
 [project]
 
 name = "e-neiler"
-version = "3.0.3"
+version = "3.0.4"
 description = "Fully customizable SMTP e-mailer desktop app."
 dependencies = [
     "pyside6==6.7.3",
