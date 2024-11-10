@@ -69,7 +69,6 @@ jobs:
           file-description: ${{ env.NAME }} app, created by ${{ env.AUTHOR }}.
           output-dir: build
           enable-plugins: pyside6
-          include-module: openpyxl
 
       - name: Mutate artifact
         run: mv build/main.app build/${{ env.NAME }}.app
@@ -119,7 +118,6 @@ jobs:
           enable-plugins: pyside6
           clang: true
           static-libpython: yes
-          include-module: openpyxl
 
       - name: Mutate artifact
         run: mv build/main.dist build/${{ env.NAME }}
@@ -168,7 +166,6 @@ jobs:
           file-description: ${{ env.NAME }} app, created by ${{ env.AUTHOR }}.
           output-dir: build
           enable-plugins: pyside6
-          include-module: openpyxl
 
       - name: Mutate artifact
         run: mv build/main.dist build/${{ env.NAME }}

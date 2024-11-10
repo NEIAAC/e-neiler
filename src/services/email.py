@@ -6,6 +6,7 @@ from string import Template
 from email.message import EmailMessage
 from math import isnan
 
+import openpyxl
 import pandas as pd
 import html2text
 from PySide6.QtCore import QThread, Signal
@@ -54,8 +55,14 @@ class EmailerThread(QThread):
 
     def readTable(self) -> tuple[list[Dict[str, str]], list[str]]:
         if self.tablePath.endswith(".csv"):
+            self.output(
+                f"Using pandas {pd.__version__} to read {self.tablePath}"
+            )
             table = pd.read_csv(self.tablePath, index_col=False)
         elif self.tablePath.endswith(".xlsx"):
+            self.output(
+                f"Using openpyxl {openpyxl.__version__} to read {self.tablePath}"
+            )
             table = pd.read_excel(self.tablePath, index_col=False)
         else:
             raise ValueError("Unsupported file extension")
