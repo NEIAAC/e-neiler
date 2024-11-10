@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.1](https://github.com/NEIAAC/e-neiler/compare/v3.1.0...v3.1.1) (2024-11-10)
+
+
+### Bug Fixes
+
+* add missing dependency usage ([7e4f6d5](https://github.com/NEIAAC/e-neiler/commit/7e4f6d579b5c3aaf3fd5c51ec5fb8f3836c9f8ff))
+* improve openpyxl calls ([586a904](https://github.com/NEIAAC/e-neiler/commit/586a90412d66527c600d16a9985966a6bfc8d43a))
+
 ## [3.1.0](https://github.com/NEIAAC/e-neiler/compare/v3.0.4...v3.1.0) (2024-11-10)
 
 
