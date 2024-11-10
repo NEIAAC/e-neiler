@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/NEIAAC/e-neiler/compare/v3.2.0...v3.2.1) (2024-11-10)
+
+
+### Bug Fixes
+
+* only set headers for fields that are not empty ([d09c8c9](https://github.com/NEIAAC/e-neiler/commit/d09c8c96eeb79a49634c3538f622ca7397ce20c8))
+
 ## [3.2.0](https://github.com/NEIAAC/e-neiler/compare/v3.1.1...v3.2.0) (2024-11-10)
 
 
