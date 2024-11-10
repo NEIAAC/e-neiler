@@ -6,8 +6,8 @@ from string import Template
 from email.message import EmailMessage
 from math import isnan
 
-import openpyxl
 import pandas as pd
+import openpyxl
 import html2text
 from PySide6.QtCore import QThread, Signal
 
