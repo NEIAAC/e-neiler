@@ -183,10 +183,12 @@ class EmailerThread(QThread):
 
                 # Configure email headers
                 message["To"] = row[cols[0]].strip()
-                message["From"] = self.origin
-                message["Subject"] = Template(self.subject).substitute(row)
-                message["Cc"] = Template(self.cc).substitute(row)
-                message["Bcc"] = Template(self.bcc).substitute(row)
+                message["From"] = self.origin.strip()
+                message["Subject"] = Template(self.subject).substitute(row).strip()
+                if self.cc:
+                    message["Cc"] = Template(self.cc).substitute(row).strip()
+                if self.bcc:
+                    message["Bcc"] = Template(self.bcc).substitute(row).strip()
 
                 # Add body to email
                 content = body.substitute(row)
