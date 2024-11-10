@@ -23,6 +23,7 @@ class EmailerThread(QThread):
         smtpUsername: str,
         smtpPassword: str,
         subject: str,
+        origin: str,
         cc: str,
         bcc: str,
         bodyPath: str,
@@ -35,6 +36,7 @@ class EmailerThread(QThread):
         self.smtpUsername = smtpUsername
         self.smtpPassword = smtpPassword
         self.subject = subject
+        self.origin = origin
         self.cc = cc
         self.bcc = bcc
         self.bodyPath = bodyPath
@@ -99,8 +101,8 @@ class EmailerThread(QThread):
             except Exception as e:
                 self.output(f"Failed to load body: {e}", "ERROR")
                 return
-            logger.info(f"Body loaded: {body}")
-            logger.info(f"Body read: {body}")
+            logger.info(f"Body loaded: {body.template}")
+            logger.info(f"Body read: {body.template}")
 
             try:
                 rows, cols = self.readTable()
@@ -115,6 +117,12 @@ class EmailerThread(QThread):
 
             if not rows or not cols:
                 self.output("Given table is empty", "ERROR")
+                return
+            if len(rows) < 1:
+                self.output(
+                    "Given table must have at least another row in addition to the headers!",
+                    "ERROR",
+                )
                 return
 
             variableInputs = {
@@ -168,7 +176,7 @@ class EmailerThread(QThread):
 
                 # Configure email headers
                 message["To"] = row[cols[0]].strip()
-                message["From"] = self.smtpUsername
+                message["From"] = self.origin
                 message["Subject"] = Template(self.subject).substitute(row)
                 message["Cc"] = Template(self.cc).substitute(row)
                 message["Bcc"] = Template(self.bcc).substitute(row)
@@ -183,14 +191,14 @@ class EmailerThread(QThread):
 
                 # Add attachments to email
                 filePaths: list[str] = []
-                if row[cols[1]]:
-                    attachmentNames = row[cols[1]].split(",")
-                    for attachmentName in attachmentNames:
-                        fullPath = os.path.join(
-                            self.attachmentPath, attachmentName
-                        )
-                        filePaths.append(fullPath)
                 try:
+                    if len(cols) > 1 and row[cols[1]]:
+                        attachmentNames = row[cols[1]].split(",")
+                        for attachmentName in attachmentNames:
+                            fullPath = os.path.join(
+                                self.attachmentPath, attachmentName
+                            )
+                            filePaths.append(fullPath)
                     for filePath in filePaths:
                         file, mainType, subType = self.readAttachment(filePath)
                         message.add_attachment(

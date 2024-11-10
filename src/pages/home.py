@@ -110,6 +110,15 @@ class HomePage(QWidget):
         )
         self.subjectInput.setMaximumWidth(500)
 
+        self.originLabel = BodyLabel("<b>FROM</b>")
+        self.originInput = LineEdit()
+        self.originInput.setMaximumWidth(500)
+        self.originInput.setText(config.origin.get())
+        self.originInput.setPlaceholderText('"Name" <sender-email@example.com>')
+        self.originInput.textChanged.connect(
+            lambda text: config.origin.set(text)
+        )
+
         self.ccLabel = BodyLabel("<b>CC</b>")
         self.ccInput = LineEdit()
         self.ccInput.setMaximumWidth(500)
@@ -122,6 +131,8 @@ class HomePage(QWidget):
         self.headLayout.setSpacing(10)
         self.headLayout.addWidget(self.subjectLabel)
         self.headLayout.addWidget(self.subjectInput)
+        self.headLayout.addWidget(self.originLabel)
+        self.headLayout.addWidget(self.originInput)
         self.headLayout.addWidget(self.ccLabel)
         self.headLayout.addWidget(self.ccInput)
         self.headLayout.addWidget(self.bccLabel)
@@ -282,6 +293,10 @@ class HomePage(QWidget):
             "Attachment folder": self.attachmentFolderInput.text(),
             "Body file": self.bodyFileInput.text(),
         }
+
+        if "@" not in self.smtpUsernameInput.text():
+            schema["From"] = self.originInput.text()
+
         for input in schema:
             if schema[input] is None or schema[input] == "":
                 InfoBar.error(
@@ -302,6 +317,9 @@ class HomePage(QWidget):
             self.smtpUsernameInput.text(),
             self.smtpPasswordInput.text(),
             self.subjectInput.text(),
+            self.originInput.text()
+            if self.originInput.text()
+            else f"\"{self.smtpUsernameInput.text().split('@')[0]}\" <{self.smtpUsernameInput.text()}>",
             self.ccInput.text(),
             self.bccInput.text(),
             self.bodyFileInput.text(),

@@ -54,6 +54,7 @@ class Config(QConfig):
     smtpPort = ConfigItem("Email", "SMTPPort", "587")
     smtpUsername = ConfigItem("Email", "SMTPUsername", "")
     smtpPassword = ConfigItem("Email", "SMTPPassword", "")
+    origin = ConfigItem("Email", "Origin", "")
 
     def reset(self):
         for _, attr in self.__class__.__dict__.items():
