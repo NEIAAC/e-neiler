@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/NEIAAC/e-neiler/compare/v3.1.1...v3.2.0) (2024-11-10)
+
+
+### Features
+
+* bump pyside6  version ([165b5f0](https://github.com/NEIAAC/e-neiler/commit/165b5f0bea23749c22c9679100c35a6d3ddf79a2))
+
 ## [3.1.1](https://github.com/NEIAAC/e-neiler/compare/v3.1.0...v3.1.1) (2024-11-10)
 
 
