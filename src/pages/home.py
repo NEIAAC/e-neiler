@@ -114,7 +114,6 @@ class HomePage(QWidget):
         self.originInput = LineEdit()
         self.originInput.setMaximumWidth(500)
         self.originInput.setText(config.origin.get())
-        self.originInput.setPlaceholderText('"Name" <sender-email@example.com>')
         self.originInput.textChanged.connect(
             lambda text: config.origin.set(text)
         )
@@ -294,6 +293,7 @@ class HomePage(QWidget):
             "Body file": self.bodyFileInput.text(),
         }
 
+        # Make From field mandatory only if we can't build it from the username ourselves
         if "@" not in self.smtpUsernameInput.text():
             schema["From"] = self.originInput.text()
 
@@ -319,7 +319,7 @@ class HomePage(QWidget):
             self.subjectInput.text(),
             self.originInput.text()
             if self.originInput.text()
-            else f"\"{self.smtpUsernameInput.text().split('@')[0]}\" <{self.smtpUsernameInput.text()}>",
+            else self.smtpUsernameInput.text(),
             self.ccInput.text(),
             self.bccInput.text(),
             self.bodyFileInput.text(),

@@ -55,12 +55,12 @@ class EmailerThread(QThread):
 
     def readTable(self) -> tuple[list[Dict[str, str]], list[str]]:
         if self.tablePath.endswith(".csv"):
-            self.output(
+            logger.info(
                 f"Using pandas {pd.__version__} to read {self.tablePath}"
             )
             table = pd.read_csv(self.tablePath, index_col=False)
         elif self.tablePath.endswith(".xlsx"):
-            self.output(
+            logger.info(
                 f"Using openpyxl {openpyxl.__version__} to read {self.tablePath}"
             )
             table = pd.read_excel(self.tablePath, index_col=False)
