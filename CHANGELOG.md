@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/NEIAAC/e-neiler/compare/v3.0.4...v3.1.0) (2024-11-10)
+
+
+### Features
+
+* add possibility to specify from field ([ee83ae0](https://github.com/NEIAAC/e-neiler/commit/ee83ae0b43c838911fc008c176fb809d5e25df73))
+
 ## [3.0.4](https://github.com/NEIAAC/e-neiler/compare/v3.0.3...v3.0.4) (2024-11-07)
 
 
