@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/NEIAAC/e-neiler/compare/v3.2.1...v3.3.0) (2024-11-11)
+
+
+### Features
+
+* add reply-to header ([7470917](https://github.com/NEIAAC/e-neiler/commit/74709177aa18b2713132e4e8d42a362240684565))
+
 ## [3.2.1](https://github.com/NEIAAC/e-neiler/compare/v3.2.0...v3.2.1) (2024-11-10)
 
 
