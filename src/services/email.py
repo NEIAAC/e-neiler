@@ -25,6 +25,7 @@ class EmailerThread(QThread):
         smtpPassword: str,
         subject: str,
         origin: str,
+        reply: str,
         cc: str,
         bcc: str,
         bodyPath: str,
@@ -38,6 +39,7 @@ class EmailerThread(QThread):
         self.smtpPassword = smtpPassword
         self.subject = subject
         self.origin = origin
+        self.reply = reply
         self.cc = cc
         self.bcc = bcc
         self.bodyPath = bodyPath
@@ -184,7 +186,13 @@ class EmailerThread(QThread):
                 # Configure email headers
                 message["To"] = row[cols[0]].strip()
                 message["From"] = self.origin.strip()
-                message["Subject"] = Template(self.subject).substitute(row).strip()
+                message["Subject"] = (
+                    Template(self.subject).substitute(row).strip()
+                )
+                if self.reply:
+                    message["Reply-To"] = (
+                        Template(self.reply).substitute(row).strip()
+                    )
                 if self.cc:
                     message["Cc"] = Template(self.cc).substitute(row).strip()
                 if self.bcc:

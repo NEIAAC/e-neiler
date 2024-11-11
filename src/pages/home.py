@@ -118,6 +118,12 @@ class HomePage(QWidget):
             lambda text: config.origin.set(text)
         )
 
+        self.replyLabel = BodyLabel("<b>REPLY</b>")
+        self.replyInput = LineEdit()
+        self.replyInput.setMaximumWidth(500)
+        self.replyInput.setText(config.reply.get())
+        self.replyInput.textChanged.connect(lambda text: config.reply.set(text))
+
         self.ccLabel = BodyLabel("<b>CC</b>")
         self.ccInput = LineEdit()
         self.ccInput.setMaximumWidth(500)
@@ -132,6 +138,8 @@ class HomePage(QWidget):
         self.headLayout.addWidget(self.subjectInput)
         self.headLayout.addWidget(self.originLabel)
         self.headLayout.addWidget(self.originInput)
+        self.headLayout.addWidget(self.replyLabel)
+        self.headLayout.addWidget(self.replyInput)
         self.headLayout.addWidget(self.ccLabel)
         self.headLayout.addWidget(self.ccInput)
         self.headLayout.addWidget(self.bccLabel)
@@ -320,6 +328,7 @@ class HomePage(QWidget):
             self.originInput.text()
             if self.originInput.text()
             else self.smtpUsernameInput.text(),
+            self.replyInput.text(),
             self.ccInput.text(),
             self.bccInput.text(),
             self.bodyFileInput.text(),
