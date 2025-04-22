@@ -1,6 +1,6 @@
 # Quick and reliable ✉️➡️
 
-E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It works can connect to your custom mail server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
+E-neiler makes it easy to quickly send high amounts of emails with tabled data through SMTP, file attachments included. It can connect to your custom mail server, gmail, outlook and any other service that allows SMTP. We support a variety of file types for both the body templates and the data tables.
 
 ## Usage 🚀
 
