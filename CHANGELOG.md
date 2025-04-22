@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/NEIAAC/e-neiler/compare/v3.3.0...v3.3.1) (2025-04-22)
+
+
+### Documentation
+
+* fix typo ([ec223df](https://github.com/NEIAAC/e-neiler/commit/ec223df11cf9ce4d3d9c4e93b6a8ddefa170e248))
+
 ## [3.3.0](https://github.com/NEIAAC/e-neiler/compare/v3.2.1...v3.3.0) (2024-11-11)
 
 
