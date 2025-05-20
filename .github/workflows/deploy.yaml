@@ -22,13 +22,19 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract.outputs.version }}
+      nuitka: ${{ steps.nuitka.outputs.nuitka }}
     steps:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # v4.2.2
-      - name: Extract version from pyproject.toml
+      - name: Extract project version from pyproject.toml
         id: extract
         run: |
           VERSION=$(awk -F\" '/^version =/ { print $2 }' pyproject.toml)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Extract Nuitka version from pyproject.toml
+        id: nuitka
+        run: |
+          VERSION=$(awk -F'nuitka==|"' '/nuitka==/ { print $3 }' pyproject.toml)
+          echo "nuitka=$VERSION" >> $GITHUB_OUTPUT
 
   macos:
     needs: [prepare]
@@ -47,7 +53,7 @@ jobs:
       - name: Build artifact
         uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
         with:
-          nuitka-version: 2.7
+          nuitka-version: ${{ needs.prepare.outputs.nuitka }}
           script-name: src/main.py
           mode: app
           include-data-dir: src/resources=resources
@@ -93,7 +99,7 @@ jobs:
       - name: Build artifact
         uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
         with:
-          nuitka-version: 2.7
+          nuitka-version: ${{ needs.prepare.outputs.nuitka }}
           script-name: src/main.py
           mode: app
           include-data-dir: src/resources=resources
@@ -138,7 +144,7 @@ jobs:
       - name: Build binaries
         uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
         with:
-          nuitka-version: 2.7
+          nuitka-version: ${{ needs.prepare.outputs.nuitka }}
           script-name: src/main.py
           mode: app
           include-data-dir: src/resources=resources
