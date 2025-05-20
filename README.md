@@ -68,7 +68,7 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
   - Ruff is used as a linter and formatter:
 
     ```shell
-    pip install .[check]
+    pip install .[lint]
     ruff check --fix
     ruff format
 

@@ -54,6 +54,7 @@ class Config(QConfig):
     smtpPort = ConfigItem("Email", "SMTPPort", "587")
     smtpUsername = ConfigItem("Email", "SMTPUsername", "")
     smtpPassword = ConfigItem("Email", "SMTPPassword", "")
+    smtpDelay = ConfigItem("Email", "SMTPDelay", 2)
     origin = ConfigItem("Email", "Origin", "")
     reply = ConfigItem("Email", "Reply", "")
 

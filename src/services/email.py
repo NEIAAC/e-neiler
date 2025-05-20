@@ -23,6 +23,7 @@ class EmailerThread(QThread):
         smtpPort: str,
         smtpUsername: str,
         smtpPassword: str,
+        smtpDelay: int,
         subject: str,
         origin: str,
         reply: str,
@@ -37,6 +38,7 @@ class EmailerThread(QThread):
         self.smtpPort = smtpPort
         self.smtpUsername = smtpUsername
         self.smtpPassword = smtpPassword
+        self.smtpDelay = smtpDelay
         self.subject = subject
         self.origin = origin
         self.reply = reply
@@ -238,6 +240,11 @@ class EmailerThread(QThread):
                     self.output(
                         f"[{total}] Sent email to {row[cols[0]]} with {len(filePaths)} {len(filePaths) == 1 and 'attachment' or 'attachments'}"
                     )
+                    self.output(
+                        f"Waiting {self.smtpDelay} seconds before sending the next email to avoid server rate limits..."
+                    )
+                    self.msleep(self.smtpDelay * 1000)
+
                 except Exception as e:
                     self.output(
                         f"[{total}] Failed to send email to {row[cols[0]]}: {e}",

@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pull-requests: write
@@ -12,40 +16,15 @@ jobs:
   metadata:
     runs-on: ubuntu-latest
     outputs:
-      major: ${{ steps.metadata.outputs.major }}
-      minor: ${{ steps.metadata.outputs.minor }}
-      patch: ${{ steps.metadata.outputs.patch }}
-      tag-name: ${{ steps.metadata.outputs.tag_name }}
-      release-created: ${{ steps.metadata.outputs.release_created }}
+      desktop: ${{ steps.metadata.outputs.release_created }}
     steps:
       - name: Update project metadata and the release pull request
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@1155c2c8dcbd6b15e85bae6bc6d1fed9552663cb # v4.2.0
         id: metadata
         with:
           release-type: python
-  build:
+
+  desktop:
     needs: [metadata]
-    if: ${{ needs.metadata.outputs.release-created}}
-    uses: ./.github/workflows/build.yaml
-    with:
-      build-version: ${{ needs.metadata.outputs.major }}.${{ needs.metadata.outputs.minor }}.${{ needs.metadata.outputs.patch }}
-  upload:
-    needs: [metadata, build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-      - name: Zip build artifacts
-        run: |
-          (cd ${{ needs.build.outputs.macos-artifact }} && zip -r ../MacOS.zip .)
-          (cd ${{ needs.build.outputs.linux-artifact }} && zip -r ../Linux.zip .)
-          (cd ${{ needs.build.outputs.windows-artifact }} && zip -r ../Windows.zip .)
-      - name: Append build artifacts to release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: >
-          gh release upload ${{ needs.metadata.outputs.tag-name }}
-          MacOS.zip#MacOS
-          Linux.zip#Linux
-          Windows.zip#Windows
+    if: ${{ needs.metadata.outputs.desktop }}
+    uses: ./.github/workflows/desktop.yaml

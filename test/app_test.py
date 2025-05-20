@@ -4,7 +4,7 @@ from PySide6.QtGui import QIcon, QPixmap
 
 from app import App
 from version import __version__
-from utils import loader
+from utils import file_loader
 from utils.constants import (
     AUTHOR_NAME,
     AUTHOR_DOMAIN,
@@ -27,5 +27,7 @@ def testAppMeta(qapp: App):
     assert qapp.organizationDomain() == AUTHOR_DOMAIN
     assert (
         qapp.windowIcon().pixmap(16, 16).toImage()
-        == QIcon(QPixmap(loader.resources(LOGO_PATH))).pixmap(16, 16).toImage()
+        == QIcon(QPixmap(file_loader.loadResource(LOGO_PATH)))
+        .pixmap(16, 16)
+        .toImage()
     )

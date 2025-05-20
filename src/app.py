@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon, QPixmap
 
 from version import __version__
-from utils import loader
+from utils import file_loader
 from utils.logger import logger
 from utils.constants import (
     EXECUTABLE_NAME,
@@ -22,7 +22,7 @@ class App(QApplication):
         self.setOrganizationName(AUTHOR_NAME)
         self.setOrganizationDomain(AUTHOR_DOMAIN)
         self.setApplicationVersion(__version__)
-        self.setWindowIcon(QIcon(QPixmap(loader.resources(LOGO_PATH))))
+        self.setWindowIcon(QIcon(QPixmap(file_loader.loadResource(LOGO_PATH))))
 
         data = [
             self.applicationName(),

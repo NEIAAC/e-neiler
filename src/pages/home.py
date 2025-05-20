@@ -17,12 +17,13 @@ from qfluentwidgets import (
     TextBrowser,
     InfoBar,
     InfoBarPosition,
+    SpinBox,
 )
 
 from app import App
 from services.email import EmailerThread
 from utils.config import config
-from utils import loader
+from utils import file_loader
 from utils.system_tray import SystemTray
 
 
@@ -35,7 +36,7 @@ class HomePage(QWidget):
 
         self.finishSound = QSoundEffect()
         self.finishSound.setSource(
-            QUrl.fromLocalFile(loader.resources("sounds/success.wav"))
+            QUrl.fromLocalFile(file_loader.loadResource("sounds/success.wav"))
         )
         self.finishSound.setVolume(0.1)
 
@@ -97,11 +98,30 @@ class HomePage(QWidget):
         self.smtpAuthLayout.addLayout(self.smtpUsernameLayout)
         self.smtpAuthLayout.addLayout(self.smtpPasswordLayout)
 
+        self.smtpDelayLabel = BodyLabel("<b>SMTP DELAY</b>")
+        self.smtpDelayInput = SpinBox()
+        self.smtpDelayInput.setFixedWidth(200)
+        self.smtpDelayInput.setMinimum(1)
+        self.smtpDelayInput.setValue(config.smtpDelay.get())
+        self.smtpDelayInput.textChanged.connect(
+            lambda text: config.smtpDelay.set(float(text))
+        )
+
+        self.smtpDelayLayout = QVBoxLayout()
+        self.smtpDelayLayout.setSpacing(10)
+        self.smtpDelayLayout.addWidget(self.smtpDelayLabel)
+        self.smtpDelayLayout.addWidget(self.smtpDelayInput)
+
+        self.smtpExtrasLayout = QHBoxLayout()
+        self.smtpExtrasLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.smtpExtrasLayout.addLayout(self.smtpDelayLayout)
+
         self.smtpLayout = QVBoxLayout()
         self.smtpLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.smtpLayout.setSpacing(20)
         self.smtpLayout.addLayout(self.smtpServerLayout)
         self.smtpLayout.addLayout(self.smtpAuthLayout)
+        self.smtpLayout.addLayout(self.smtpExtrasLayout)
 
         self.subjectLabel = BodyLabel("<b>SUBJECT</b>")
         self.subjectInput = LineEdit()
@@ -110,13 +130,11 @@ class HomePage(QWidget):
         )
         self.subjectInput.setMaximumWidth(500)
 
-        self.originLabel = BodyLabel("<b>FROM</b>")
-        self.originInput = LineEdit()
-        self.originInput.setMaximumWidth(500)
-        self.originInput.setText(config.origin.get())
-        self.originInput.textChanged.connect(
-            lambda text: config.origin.set(text)
-        )
+        self.fromLabel = BodyLabel("<b>FROM</b>")
+        self.fromInput = LineEdit()
+        self.fromInput.setMaximumWidth(500)
+        self.fromInput.setText(config.origin.get())
+        self.fromInput.textChanged.connect(lambda text: config.origin.set(text))
 
         self.replyLabel = BodyLabel("<b>REPLY</b>")
         self.replyInput = LineEdit()
@@ -136,8 +154,8 @@ class HomePage(QWidget):
         self.headLayout.setSpacing(10)
         self.headLayout.addWidget(self.subjectLabel)
         self.headLayout.addWidget(self.subjectInput)
-        self.headLayout.addWidget(self.originLabel)
-        self.headLayout.addWidget(self.originInput)
+        self.headLayout.addWidget(self.fromLabel)
+        self.headLayout.addWidget(self.fromInput)
         self.headLayout.addWidget(self.replyLabel)
         self.headLayout.addWidget(self.replyInput)
         self.headLayout.addWidget(self.ccLabel)
@@ -145,32 +163,34 @@ class HomePage(QWidget):
         self.headLayout.addWidget(self.bccLabel)
         self.headLayout.addWidget(self.bccInput)
 
-        self.bodyLabel = BodyLabel("<b>BODY FILE</b>")
-        self.bodyPicker = QFileDialog()
-        self.bodyPicker.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.bodyFileInput = LineEdit()
-        self.bodyFileInput.setMaximumWidth(500)
-        self.bodyFileInput.setReadOnly(True)
-        self.bodyFileInput.setPlaceholderText("No body file selected.")
-        self.bodyFileDialog = QFileDialog()
-        self.bodyFileDialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.bodyFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
-        self.bodyFilePickButton.clicked.connect(
-            lambda: self.bodyFileInput.setText(
-                self.bodyFileDialog.getOpenFileName(
-                    self, "Select a body file!"
+        self.templateLabel = BodyLabel("<b>BODY TEMPLATE FILE</b>")
+        self.templatePicker = QFileDialog()
+        self.templatePicker.setFileMode(QFileDialog.FileMode.ExistingFile)
+        self.templateFileInput = LineEdit()
+        self.templateFileInput.setMaximumWidth(500)
+        self.templateFileInput.setReadOnly(True)
+        self.templateFileInput.setPlaceholderText(
+            "No body template file selected."
+        )
+        self.templateFileDialog = QFileDialog()
+        self.templateFileDialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        self.templateFilePickButton = PrimaryToolButton(FluentIcon.FOLDER)
+        self.templateFilePickButton.clicked.connect(
+            lambda: self.templateFileInput.setText(
+                self.templateFileDialog.getOpenFileName(
+                    self, "Select a body template file!"
                 )[0]
             )
         )
-        self.bodyContentLayout = QHBoxLayout()
-        self.bodyContentLayout.setSpacing(10)
-        self.bodyContentLayout.addWidget(self.bodyFilePickButton)
-        self.bodyContentLayout.addWidget(self.bodyFileInput)
-        self.bodyLayout = QVBoxLayout()
-        self.bodyLayout.setSpacing(10)
-        self.bodyLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.bodyLayout.addWidget(self.bodyLabel)
-        self.bodyLayout.addLayout(self.bodyContentLayout)
+        self.templateContentLayout = QHBoxLayout()
+        self.templateContentLayout.setSpacing(10)
+        self.templateContentLayout.addWidget(self.templateFilePickButton)
+        self.templateContentLayout.addWidget(self.templateFileInput)
+        self.templateLayout = QVBoxLayout()
+        self.templateLayout.setSpacing(10)
+        self.templateLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.templateLayout.addWidget(self.templateLabel)
+        self.templateLayout.addLayout(self.templateContentLayout)
 
         self.tableLabel = BodyLabel("<b>VARIABLE TABLE FILE</b>")
         self.tableFileInput = LineEdit()
@@ -262,7 +282,7 @@ class HomePage(QWidget):
         self.contentLayout.setSpacing(40)
         self.contentLayout.addLayout(self.smtpLayout)
         self.contentLayout.addLayout(self.headLayout)
-        self.contentLayout.addLayout(self.bodyLayout)
+        self.contentLayout.addLayout(self.templateLayout)
         self.contentLayout.addLayout(self.tableLayout)
         self.contentLayout.addLayout(self.attachmentLayout)
         self.contentLayout.addLayout(self.runContentLayout)
@@ -295,15 +315,16 @@ class HomePage(QWidget):
             "SMTP Port": self.smtpPortInput.text(),
             "SMTP Username": self.smtpUsernameInput.text(),
             "SMTP Password": self.smtpPasswordInput.text(),
+            "SMTP Delay": self.smtpDelayInput.text(),
             "Subject": self.subjectInput.text(),
-            "Table file": self.tableFileInput.text(),
+            "Variable Table file": self.tableFileInput.text(),
             "Attachment folder": self.attachmentFolderInput.text(),
-            "Body file": self.bodyFileInput.text(),
+            "Body Template file": self.templateFileInput.text(),
         }
 
         # Make From field mandatory only if we can't build it from the username ourselves
         if "@" not in self.smtpUsernameInput.text():
-            schema["From"] = self.originInput.text()
+            schema["From"] = self.fromInput.text()
 
         for input in schema:
             if schema[input] is None or schema[input] == "":
@@ -324,14 +345,15 @@ class HomePage(QWidget):
             self.smtpPortInput.text(),
             self.smtpUsernameInput.text(),
             self.smtpPasswordInput.text(),
+            self.smtpDelayInput.value(),
             self.subjectInput.text(),
-            self.originInput.text()
-            if self.originInput.text()
+            self.fromInput.text()
+            if self.fromInput.text()
             else self.smtpUsernameInput.text(),
             self.replyInput.text(),
             self.ccInput.text(),
             self.bccInput.text(),
-            self.bodyFileInput.text(),
+            self.templateFileInput.text(),
             self.tableFileInput.text(),
             self.attachmentFolderInput.text(),
         )

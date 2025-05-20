@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QSystemTrayIcon
 from PySide6.QtGui import QIcon, QPixmap
 
 from utils.constants import LOGO_PATH
-from utils import loader
+from utils import file_loader
 
 
 class SystemTray(QSystemTrayIcon):
@@ -11,7 +11,7 @@ class SystemTray(QSystemTrayIcon):
     def __init__(self, visible: bool = False):
         super().__init__()
 
-        self.setIcon(QIcon(QPixmap(loader.resources(LOGO_PATH))))
+        self.setIcon(QIcon(QPixmap(file_loader.loadResource(LOGO_PATH))))
         self.setVisible(visible)
 
     def send(self, title: str, body: str, messageClicked: callable = None):
