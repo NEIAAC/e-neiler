@@ -4,7 +4,7 @@ name = "e-neiler"
 version = "3.4.2"
 description = "Fully customizable SMTP e-mailer desktop app."
 dependencies = [
-    "pyside6==6.8.0.2",
+    "pyside6==6.9.0",
     "pyside6-fluent-widgets==1.8.1",
     "loguru===0.7.3",
     "pandas===2.2.3",
