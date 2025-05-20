@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.2](https://github.com/NEIAAC/e-neiler/compare/v3.4.1...v3.4.2) (2025-05-20)
+
+
+### Bug Fixes
+
+* update build version case ([3b884a5](https://github.com/NEIAAC/e-neiler/commit/3b884a5906624ebc842055fee11235165153a97a))
+
 ## [3.4.1](https://github.com/NEIAAC/e-neiler/compare/v3.4.0...v3.4.1) (2025-05-20)
 
 
