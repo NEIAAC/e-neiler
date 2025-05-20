@@ -5,7 +5,7 @@ version = "3.3.0"
 description = "Fully customizable SMTP e-mailer desktop app."
 dependencies = [
     "pyside6==6.8.0.2",
-    "pyside6-fluent-widgets==1.6.6",
+    "pyside6-fluent-widgets==1.8.1",
     "loguru===0.7.3",
     "pandas===2.2.3",
     "openpyxl==3.1.5",
