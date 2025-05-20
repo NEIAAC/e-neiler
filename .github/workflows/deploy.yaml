@@ -147,8 +147,9 @@ jobs:
           enable-plugins: pyside6
 
       - name: Zip build
+        shell: pwsh
         working-directory: build
-        run: zip -r Windows.zip .
+        run: Compress-Archive -Path * -DestinationPath Windows.zip
       - name: Append build to release
         working-directory: build
         env:
