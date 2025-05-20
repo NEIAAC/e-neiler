@@ -27,4 +27,4 @@ jobs:
   desktop:
     needs: [metadata]
     if: ${{ needs.metadata.outputs.desktop }}
-    uses: ./.github/workflows/desktop.yaml
+    uses: ./.github/workflows/deploy.yaml

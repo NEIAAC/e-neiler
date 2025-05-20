@@ -1,0 +1,17 @@
+{
+	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+	"release-type": "python",
+	"separate-pull-requests": true,
+	"always-update": true,
+	"sequential-calls": true,
+	"release-search-depth": 500,
+	"commit-search-depth": 1000,
+	"plugins": [
+		{
+			"type": "sentence-case"
+		}
+	],
+	"packages": {
+		".": {}
+	}
+}
