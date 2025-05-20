@@ -66,20 +66,13 @@ jobs:
       - name: Zip build
         working-directory: build
         run: zip -r ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Linux.zip .
-      - name: List files build
-        working-directory: build
-        run: ls -la
       - name: Append build to release
         working-directory: build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: gh release upload v${{ needs.prepare.outputs.version }} ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Linux.zip
-      - name: List files build later
-        working-directory: build
-        run: ls -la
-      - name: List files root later
-        run: ls -la
+
   linux:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -113,8 +106,10 @@ jobs:
           static-libpython: yes
 
       - name: Zip build
-        run: cd build && zip -r ../${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-MacOS.zip .
+        working-directory: build
+        run: zip -r ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-MacOS.zip .
       - name: Append build to release
+        working-directory: build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -152,8 +147,10 @@ jobs:
           enable-plugins: pyside6
 
       - name: Zip build
-        run: cd build && zip -r ../${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Windows.zip .
+        working-directory: build
+        run: zip -r ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Windows.zip .
       - name: Append build to release
+        working-directory: build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
