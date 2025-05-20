@@ -47,7 +47,7 @@ jobs:
       - name: Build artifact
         uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
         with:
-          nuitka-version: main
+          nuitka-version: 2.7
           script-name: src/main.py
           onefile: false
           standalone: true
@@ -90,7 +90,7 @@ jobs:
       - name: Build artifact
         uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
         with:
-          nuitka-version: main
+          nuitka-version: 2.7
           script-name: src/main.py
           onefile: false
           standalone: true
@@ -131,7 +131,7 @@ jobs:
       - name: Build binaries
         uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
         with:
-          nuitka-version: main
+          nuitka-version: 2.7
           script-name: src/main.py
           onefile: false
           standalone: true
