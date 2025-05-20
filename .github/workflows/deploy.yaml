@@ -65,13 +65,13 @@ jobs:
 
       - name: Zip build
         working-directory: build
-        run: zip -r ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Linux.zip .
+        run: zip -r Linux.zip .
       - name: Append build to release
         working-directory: build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh release upload v${{ needs.prepare.outputs.version }} ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Linux.zip
+        run: gh release upload --clobber v${{ needs.prepare.outputs.version }} Linux.zip
 
   linux:
     needs: [prepare]
@@ -107,13 +107,13 @@ jobs:
 
       - name: Zip build
         working-directory: build
-        run: zip -r ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-MacOS.zip .
+        run: zip -r MacOS.zip .
       - name: Append build to release
         working-directory: build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh release upload v${{ needs.prepare.outputs.version }} ../${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-MacOS.zip
+        run: gh release upload --clobber v${{ needs.prepare.outputs.version }} MacOS.zip
 
   windows:
     needs: [prepare]
@@ -148,10 +148,10 @@ jobs:
 
       - name: Zip build
         working-directory: build
-        run: zip -r ${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Windows.zip .
+        run: zip -r Windows.zip .
       - name: Append build to release
         working-directory: build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh release upload v${{ needs.prepare.outputs.version }} ../${{ env.NAME }}-V${{ needs.prepare.outputs.version }}-Windows.zip
+        run: gh release upload --clobber v${{ needs.prepare.outputs.version }} Windows.zip
