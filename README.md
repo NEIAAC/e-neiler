@@ -79,6 +79,8 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
     # Changed files must be added to the staged area and commited again to apply fixes.
     ```
 
+- ### Testing 🧪
+
   - PyTest and PyTest-Qt are used for testing:
 
     ```shell
@@ -86,11 +88,13 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
     pytest
     ```
 
-  - Nuitka is used for cross-compiling to all supported platforms:
+- ### Building 📦
+
+  - Nuitka is used for cross-compiling to all supported platforms, this is how the app is built from the source code, in each release:
 
     ```shell
     pip install .[build]
-    nuitka <options>
+    nuitka <options> src/main.py
     ```
 
     See the build [workflow](./.github/workflows/build.yaml) for a list of options used for each platform.
