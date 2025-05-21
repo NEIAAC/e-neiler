@@ -10,7 +10,7 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
   - [Use this link to start the download.](https://github.com/NEIAAC/e-neiler/releases/latest/download/Windows.zip)
 
-  - Start the `main.exe` file **inside** the extracted folder by _double clicking_ on it, you can create a shortcut with any name you like for this file.
+  - Start the `exe` file **inside** the extracted folder by _double clicking_ on it, you can create a shortcut with any name you like for this file.
 
   - If you get a message from Windows with a warning that blocks the app from running, look for the **hidden** continue **button** and use it to **safely ignore** this warning.
 
@@ -18,11 +18,11 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
   - [Use this link to start the download.](https://github.com/NEIAAC/e-neiler/releases/latest/download/Linux.zip)
 
-  - Start the `main.bin` file **inside** the extracted folder, remember to **update the execution permissions** first by opening a terminal and running:
+  - Start the `bin` file **inside** the extracted folder, remember to **update the execution permissions** first by opening a terminal and running:
 
       ```shell
-      chmod +x main.bin
-      ./main.bin
+      chmod +x <name>.bin
+      ./<name>.bin
       ```
 
   - This binary has been successfully tested on Ubuntu and Arch with both the Wayland and X11 protocols, other setups may need additional tinkering.
@@ -31,7 +31,7 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
   - [Use this link to start the download.](https://github.com/NEIAAC/e-neiler/releases/latest/download/MacOS.zip)
 
-  - Start the extracted bundle app by _clicking_ on it.
+  - Start the extracted bundle `app` by _clicking_ on it.
 
   - If the app fails to open, go to [this support page](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac) and select your OS version at the top, then follow the instructions.
 
