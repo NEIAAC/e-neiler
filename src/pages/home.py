@@ -262,7 +262,7 @@ class HomePage(QWidget):
         self.runLogsClearButton.setFixedWidth(100)
         self.runLogsClearButton.clicked.connect(
             lambda: (
-                self.runLogsBox.clear(),
+                self.runLogsBox.clear(),  # type: ignore
                 self.runLogsClearButton.setDisabled(True),
             )
         )

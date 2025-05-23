@@ -3,6 +3,6 @@ repos:
     rev: v0.11.11
     hooks:
       - id: ruff-check
-        args: [--fix, --exit-zero, --exit-non-zero-on-fix]
+        args: [--fix, --exit-zero]
       - id: ruff-format
-        args: [--exit-non-zero-on-format]
+        args: []

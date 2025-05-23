@@ -21,4 +21,4 @@ jobs:
       - name: Install dependencies
         run: pip install .[lint]
       - name: Run check
-        run: ruff check && ruff format --check && mypy src/main.py
+        run: ruff check && ruff format --check && mypy src
