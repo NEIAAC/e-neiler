@@ -1,7 +1,7 @@
 # See configuration examples by looking at the release.json and .manifest.json in the
-# https://github.com/NEIAAC/typescript-template and https://github.com/NEIAAC/python-template repositories.
+# https://github.com/NEIAAC/typescript-template and https://github.com/NEIAAC/python-template repositories
 # For actions like forcing a specific release version or working with multiple branches, see the
-# official documentation: https://github.com/googleapis/release-please
+# official documentation at https://github.com/googleapis/release-please
 name: release
 
 on:
