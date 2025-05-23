@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/NEIAAC/e-neiler/compare/v3.4.2...v3.5.0) (2025-05-23)
+
+
+### Features
+
+* improve best practice usage ([63e92b1](https://github.com/NEIAAC/e-neiler/commit/63e92b11b094a30ee2f31a65b4cab116389e4d2c))
+
 ## [3.4.2](https://github.com/NEIAAC/e-neiler/compare/v3.4.1...v3.4.2) (2025-05-20)
 
 
