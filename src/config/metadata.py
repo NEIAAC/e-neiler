@@ -2,9 +2,11 @@ import os
 
 from PySide6.QtCore import QStandardPaths
 
-APP_NAME = "E-neiler"
+# Beware of changing these variable names as they are used in the deployment workflows to get required information
+EXECUTABLE_NAME = "E-neiler"
 AUTHOR_NAME = "NEIAAC"
 AUTHOR_DOMAIN = "neiaac.com"
+
 LOGO_PATH = "icons/logo.png"
 
 DATA_PATH = os.path.join(
@@ -12,6 +14,6 @@ DATA_PATH = os.path.join(
         QStandardPaths.StandardLocation.GenericConfigLocation
     ),
     AUTHOR_NAME,
-    APP_NAME,
+    EXECUTABLE_NAME,
 )
-"""Path to store app data on the system, usually this should not need be changed."""
+"""Path to store app data on the system, usually this should not need to be changed."""

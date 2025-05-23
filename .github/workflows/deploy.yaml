@@ -65,7 +65,7 @@ jobs:
           mode: app
           include-data-dir: src/resources=resources
           macos-app-icon: src/resources/icons/logo.png
-          macos-signed-app-name: ${{ env.SIGNATURE }}
+          macos-signed-app-name: ${{ needs.prepare.outputs.signature }}
           macos-app-name: ${{ needs.prepare.outputs.name }}
           macos-app-version: ${{ needs.prepare.outputs.version }}
           product-version: ${{ needs.prepare.outputs.version }}
