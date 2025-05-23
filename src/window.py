@@ -5,20 +5,20 @@ old = sys.stdout
 try:
     sys.stdout = open(os.devnull, "w")
     import qfluentwidgets
-    from qfluentwidgets import (
-        FluentWindow,
-        FluentIcon,
-        NavigationItemPosition,
-        SplashScreen,
-    )
 finally:
     sys.stdout.close()
     sys.stdout = old
-from PySide6.QtCore import QSize, QPoint
 
+from PySide6.QtCore import QSize, QPoint
 from utils.data_saver import config
 from pages.home import HomePage
 from pages.settings import SettingsPage
+from qfluentwidgets import (
+    FluentWindow,
+    FluentIcon,
+    NavigationItemPosition,
+    SplashScreen,
+)
 
 
 class Window(FluentWindow):
