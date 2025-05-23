@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.1](https://github.com/NEIAAC/e-neiler/compare/v3.5.0...v3.5.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* Correct manifest version ([826440f](https://github.com/NEIAAC/e-neiler/commit/826440f54bcb00d303a151e07ba9372735f3b748))
+* Remove broken function calls ([b3798aa](https://github.com/NEIAAC/e-neiler/commit/b3798aa65c4157f081562928d87114ffd4af847b))
+
 ## [3.4.0](https://github.com/NEIAAC/e-neiler/compare/v3.3.0...v3.4.0) (2025-05-23)
 
 
