@@ -12,7 +12,7 @@ from qfluentwidgets import (
     ColorValidator,
 )
 
-from utils.constants import DATA_PATH
+from config.metadata import DATA_PATH
 
 CONFIG_PATH = os.path.join(DATA_PATH, "config.json")
 
@@ -21,7 +21,7 @@ class ConfigItem(OptionsConfigItem):
     def set(self, value, save=False):
         self.value = value
         if save:
-            self.parent.save()
+            self.parent.save()  # type: ignore
 
     def get(self):
         return self.value

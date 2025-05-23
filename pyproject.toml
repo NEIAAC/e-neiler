@@ -1,22 +1,25 @@
 [project]
-
-name = "e-neiler"
-version = "3.4.2"
-description = "Fully customizable SMTP e-mailer desktop app."
+name = "app"
+dynamic = ["version"]
+requires-python = "~=3.11"
 dependencies = [
     "pyside6==6.9.0",
     "pyside6-fluent-widgets==1.8.1",
     "loguru===0.7.3",
-    "pandas===2.2.3",
     "openpyxl==3.1.5",
+    "types-openpyxl==3.1.5.20250516",
     "html2text==2025.4.15",
 ]
 
 [project.optional-dependencies]
-
-lint = ["ruff==0.11.10", "pre-commit==4.2.0"]
+lint = ["mypy==1.15.0", "ruff==0.11.10", "pre-commit==4.2.0"]
 test = ["pytest==8.3.5", "pytest-qt==4.4.0", "pytest-xvfb==3.1.1"]
 build = ["nuitka==2.7.2", "imageio==2.37.0"]
+
+[tool.mypy]
+strict = false
+follow_untyped_imports = true
+check_untyped_defs = true
 
 [tool.ruff]
 line-length = 80

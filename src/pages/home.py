@@ -22,7 +22,7 @@ from qfluentwidgets import (
 
 from app import App
 from services.email import EmailerThread
-from utils.config import config
+from utils.data_saver import config
 from utils import file_loader
 from utils.system_tray import SystemTray
 

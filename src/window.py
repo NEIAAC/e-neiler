@@ -1,8 +1,8 @@
 import os
 import sys
 
+old = sys.stdout
 try:
-    old = sys.stdout
     sys.stdout = open(os.devnull, "w")
     import qfluentwidgets
     from qfluentwidgets import (
@@ -16,7 +16,7 @@ finally:
     sys.stdout = old
 from PySide6.QtCore import QSize, QPoint
 
-from utils.config import config
+from utils.data_saver import config
 from pages.home import HomePage
 from pages.settings import SettingsPage
 
@@ -48,7 +48,7 @@ class Window(FluentWindow):
 
         self.splashScreen.finish()
 
-    def closeEvent(self, event):
+    def closeEvent(self, e):
         """Saves the current window geometry before closing."""
         config.width.set(self.width())
         config.height.set(self.height())
@@ -56,4 +56,4 @@ class Window(FluentWindow):
         config.y.set(self.y())
         config.maximized.set(self.isMaximized())
         config.save()
-        super().closeEvent(event)
+        super().closeEvent(e)

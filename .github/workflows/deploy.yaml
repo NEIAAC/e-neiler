@@ -8,11 +8,6 @@ concurrency:
   group: deploy
   cancel-in-progress: true
 
-env:
-  NAME: E-neiler
-  AUTHOR: NEIAAC
-  SIGNATURE: com.neiaac.e-neiler
-
 defaults:
   run:
     shell: bash
@@ -21,20 +16,32 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
+      nuitka: ${{ steps.extract.outputs.nuitka }}
       version: ${{ steps.extract.outputs.version }}
-      nuitka: ${{ steps.nuitka.outputs.nuitka }}
+      name: ${{ steps.extract.outputs.name }}
+      author: ${{ steps.extract.outputs.author }}
+      signature: ${{ steps.extract.outputs.signature }}
     steps:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # v4.2.2
-      - name: Extract project version from pyproject.toml
+      - name: Extract necessary build info
         id: extract
         run: |
-          VERSION=$(awk -F\" '/^version =/ { print $2 }' pyproject.toml)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-      - name: Extract Nuitka version from pyproject.toml
-        id: nuitka
-        run: |
-          VERSION=$(awk -F'nuitka==|"' '/nuitka==/ { print $3 }' pyproject.toml)
-          echo "nuitka=$VERSION" >> $GITHUB_OUTPUT
+          NUITKA_VERSION=$(awk -F'nuitka==|"' '/nuitka==/ { print $3 }' pyproject.toml)
+          echo "nuitka=$NUITKA_VERSION" >> $GITHUB_OUTPUT
+
+          APP_VERSION=$(awk -F\" '/^__version__ =/ { print $2 }' src/version.py)
+          echo "version=$APP_VERSION" >> $GITHUB_OUTPUT
+
+          APP_NAME=$(awk -F'"' '/^EXECUTABLE_NAME =/ { print $2 }' src/config/metadata.py)
+          echo "name=$APP_NAME" >> $GITHUB_OUTPUT
+
+          AUTHOR_NAME=$(awk -F'"' '/^AUTHOR_NAME =/ { print $2 }' src/config/metadata.py)
+          echo "author=$AUTHOR_NAME" >> $GITHUB_OUTPUT
+
+          AUTHOR_DOMAIN=$(awk -F'"' '/^AUTHOR_DOMAIN =/ { print $2 }' src/config/metadata.py)
+          REVERSED_DOMAIN=$(echo "${AUTHOR_DOMAIN,,}" | awk -F. '{ for (i=NF; i>0; i--) printf "%s%s", $i, (i==1 ? "" : ".") }')
+          SIGNATURE="${REVERSED_DOMAIN}.${APP_NAME,,}"
+          echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
 
   macos:
     needs: [prepare]
@@ -44,7 +51,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # v4.2.2
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: "3.12"
+          python-version-file: "pyproject.toml"
           cache: "pip"
 
       - name: Install dependencies
@@ -59,22 +66,22 @@ jobs:
           include-data-dir: src/resources=resources
           macos-app-icon: src/resources/icons/logo.png
           macos-signed-app-name: ${{ env.SIGNATURE }}
-          macos-app-name: ${{ env.NAME }}
+          macos-app-name: ${{ needs.prepare.outputs.name }}
           macos-app-version: ${{ needs.prepare.outputs.version }}
           product-version: ${{ needs.prepare.outputs.version }}
           file-version: ${{ needs.prepare.outputs.version }}
-          company-name: ${{ env.AUTHOR }}
-          product-name: ${{ env.NAME }}
-          file-description: ${{ env.NAME }} app, created by ${{ env.AUTHOR }}.
+          company-name: ${{ needs.prepare.outputs.author }}
+          product-name: ${{ needs.prepare.outputs.name }}
+          file-description: ${{ needs.prepare.outputs.name }} app, created by ${{ needs.prepare.outputs.author }}.
           output-dir: build
           enable-plugins: pyside6
 
       - name: Rename build
         working-directory: build
-        run: mv main.app ${{ env.NAME }}.app
+        run: mv main.app ${{ needs.prepare.outputs.name }}.app
       - name: Zip build
         working-directory: build
-        run: zip -r MacOS.zip ${{ env.NAME }}.app
+        run: zip -r MacOS.zip ${{ needs.prepare.outputs.name }}.app
       - name: Append build to release
         working-directory: build
         env:
@@ -90,7 +97,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # v4.2.2
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: "3.12"
+          python-version-file: "pyproject.toml"
           cache: "pip"
 
       - name: Install dependencies
@@ -106,9 +113,9 @@ jobs:
           linux-icon: src/resources/icons/logo.png
           product-version: ${{ needs.prepare.outputs.version }}
           file-version: ${{ needs.prepare.outputs.version }}
-          company-name: ${{ env.AUTHOR }}
-          product-name: ${{ env.NAME }}
-          file-description: ${{ env.NAME }} app, created by ${{ env.AUTHOR }}.
+          company-name: ${{ needs.prepare.outputs.author }}
+          product-name: ${{ needs.prepare.outputs.name }}
+          file-description: ${{ needs.prepare.outputs.name }} app, created by ${{ needs.prepare.outputs.author }}.
           output-dir: build
           enable-plugins: pyside6
           clang: true
@@ -116,10 +123,10 @@ jobs:
 
       - name: Rename build
         working-directory: build
-        run: mv main.bin ${{ env.NAME }}.bin
+        run: mv main.bin ${{ needs.prepare.outputs.name }}.bin
       - name: Zip build
         working-directory: build
-        run: zip -r Linux.zip ${{ env.NAME }}.bin
+        run: zip -r Linux.zip ${{ needs.prepare.outputs.name }}.bin
       - name: Append build to release
         working-directory: build
         env:
@@ -135,7 +142,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # v4.2.2
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: "3.12"
+          python-version-file: "pyproject.toml"
           cache: "pip"
 
       - name: Install dependencies
@@ -152,19 +159,19 @@ jobs:
           windows-console-mode: disable
           product-version: ${{ needs.prepare.outputs.version }}
           file-version: ${{ needs.prepare.outputs.version }}
-          company-name: ${{ env.AUTHOR }}
-          product-name: ${{ env.NAME }}
-          file-description: ${{ env.NAME }} app, created by ${{ env.AUTHOR }}.
+          company-name: ${{ needs.prepare.outputs.author }}
+          product-name: ${{ needs.prepare.outputs.name }}
+          file-description: ${{ needs.prepare.outputs.name }} app, created by ${{ needs.prepare.outputs.author }}.
           output-dir: build
           enable-plugins: pyside6
 
       - name: Rename build
         working-directory: build
-        run: mv main.exe ${{ env.NAME }}.exe
+        run: mv main.exe ${{ needs.prepare.outputs.name }}.exe
       - name: Zip build
         shell: pwsh
         working-directory: build
-        run: Compress-Archive -Path ${{ env.NAME }}.exe -DestinationPath Windows.zip
+        run: Compress-Archive -Path ${{ needs.prepare.outputs.name }}.exe -DestinationPath Windows.zip
       - name: Append build to release
         working-directory: build
         env:

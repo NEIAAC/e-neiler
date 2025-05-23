@@ -5,10 +5,10 @@ from PySide6.QtGui import QIcon, QPixmap
 from app import App
 from version import __version__
 from utils import file_loader
-from utils.constants import (
+from config.metadata import (
     AUTHOR_NAME,
     AUTHOR_DOMAIN,
-    EXECUTABLE_NAME,
+    APP_NAME,
     LOGO_PATH,
 )
 
@@ -20,8 +20,8 @@ def qapp_cls():
 
 def testAppMeta(qapp: App):
     assert qapp.applicationName() == "Test"
-    qapp.setApplicationName(EXECUTABLE_NAME)
-    assert qapp.applicationName() == EXECUTABLE_NAME
+    qapp.setApplicationName(APP_NAME)
+    assert qapp.applicationName() == APP_NAME
     assert qapp.applicationVersion() == __version__
     assert qapp.organizationName() == AUTHOR_NAME
     assert qapp.organizationDomain() == AUTHOR_DOMAIN

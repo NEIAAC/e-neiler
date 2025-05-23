@@ -1,15 +1,13 @@
 import os
 import smtplib
 import mimetypes
-from typing import Dict
 from string import Template
 from email.message import EmailMessage
-from math import isnan
 
-import pandas as pd
-import openpyxl
-import html2text
 from PySide6.QtCore import QThread, Signal
+from csv import DictReader, __version__ as csv_version
+from openpyxl import load_workbook, __version__ as openpyxl_version
+import html2text
 
 from utils.logger import logger
 
@@ -57,30 +55,46 @@ class EmailerThread(QThread):
             content = bodyFile.read()
         return Template(content)
 
-    def readTable(self) -> tuple[list[Dict[str, str]], list[str]]:
+    def readTable(self) -> tuple[list[dict[str, str]], list[str]]:
         if self.tablePath.endswith(".csv"):
             logger.info(
-                f"Using pandas {pd.__version__} to read {self.tablePath}"
+                f"Using native CSV {csv_version} module to read {self.tablePath}"
             )
-            table = pd.read_csv(self.tablePath, index_col=False)
+            records = []
+            with open(self.tablePath, mode="r", encoding="utf-8") as csvfile:
+                reader = DictReader(csvfile)
+                headers = reader.fieldnames
+                if not headers:
+                    raise ValueError("CSV file has no headers")
+                for row in reader:
+                    records.append(
+                        {
+                            key: (value if value else "")
+                            for key, value in row.items()
+                        }
+                    )
         elif self.tablePath.endswith(".xlsx"):
             logger.info(
-                f"Using openpyxl {openpyxl.__version__} to read {self.tablePath}"
+                f"Using openpyxl {openpyxl_version} to read {self.tablePath}"
             )
-            table = pd.read_excel(self.tablePath, index_col=False)
+            workbook = load_workbook(filename=self.tablePath, data_only=True)
+            sheet = workbook.active
+            if not sheet:
+                raise ValueError("Excel file has no sheets")
+            headers = [str(cell.value) for cell in sheet[1] if cell.value]
+            if not headers:
+                raise ValueError("Excel file has no headers")
+            records = []
+            for row in sheet.iter_rows(min_row=2, values_only=True):  # type: ignore
+                record = {
+                    headers[i]: (value if value else "")
+                    for i, value in enumerate(row)
+                }
+                records.append(record)
         else:
             raise ValueError("Unsupported file extension")
 
-        records = table.to_dict("records")
-        headers = list(table.columns)
-
-        # Convert NaN, which is parsed in empty cells, to empty string
-        for record in records:
-            for key in record:
-                if type(record[key]) is float and isnan(record[key]):
-                    record[key] = ""
-
-        return records, headers
+        return records, list(headers)
 
     def readAttachment(self, filePath: str) -> tuple[bytes, str, str]:
         mimeType, _ = mimetypes.guess_type(filePath)
@@ -159,7 +173,7 @@ class EmailerThread(QThread):
                     )
                     return
 
-            server = smtplib.SMTP(host=self.smtpHost, port=self.smtpPort)
+            server = smtplib.SMTP(host=self.smtpHost, port=int(self.smtpPort))
 
             try:
                 server.starttls()
@@ -171,8 +185,8 @@ class EmailerThread(QThread):
                 self.output(f"Failed to login: {e}", "ERROR")
                 return
 
-            total: int = 0
-            successful: int = 0
+            total = 0
+            successful = 0
             for row in rows:
                 total += 1
 

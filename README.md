@@ -65,6 +65,13 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
 
 - ### Tooling 🧰
 
+  - Mypy is used for type checking:
+
+    ```shell
+    pip install .[lint]
+    mypy src/main.py
+    ```
+
   - Ruff is used as a linter and formatter:
 
     ```shell
@@ -97,4 +104,4 @@ E-neiler makes it easy to quickly send high amounts of emails with tabled data t
     nuitka <options> src/main.py
     ```
 
-    See the build [workflow](./.github/workflows/build.yaml) for a list of options used for each platform.
+    See the [deploy workflow](./.github/workflows/deploy.yaml) for a list of options used for each platform.
