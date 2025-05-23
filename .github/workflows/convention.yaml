@@ -4,7 +4,7 @@ name: "convention"
 on:
   pull_request_target:
     branches: [main]
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, edited]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}

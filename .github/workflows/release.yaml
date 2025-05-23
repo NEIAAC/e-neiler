@@ -1,7 +1,7 @@
 # See configuration examples by looking at the release.json and .manifest.json in the
 # https://github.com/NEIAAC/typescript-template and https://github.com/NEIAAC/python-template repositories
-# For actions like forcing a specific release version or working with multiple branches, see the
-# official documentation at https://github.com/googleapis/release-please
+# For actions like forcing a specific release version or working with multiple release
+# branches, see the official documentation: https://github.com/googleapis/release-please
 name: release
 
 on:
@@ -22,8 +22,7 @@ jobs:
     outputs:
       desktop: ${{ steps.metadata.outputs.release_created }}
     steps:
-      - name: Update project metadata and the release pull request
-        uses: googleapis/release-please-action@1155c2c8dcbd6b15e85bae6bc6d1fed9552663cb # v4.2.0
+      - uses: googleapis/release-please-action@1155c2c8dcbd6b15e85bae6bc6d1fed9552663cb # v4.2.0
         id: metadata
         with:
           release-type: python
