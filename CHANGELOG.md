@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.4.0](https://github.com/NEIAAC/e-neiler/compare/v3.3.0...v3.4.0) (2025-05-23)
+
+
+### Features
+
+* Add delay to prevent rate limiting ([c4ff740](https://github.com/NEIAAC/e-neiler/commit/c4ff740b1a5d4ce8bcc6d8259f7025d282e0acde))
+* Improve best practice usage ([63e92b1](https://github.com/NEIAAC/e-neiler/commit/63e92b11b094a30ee2f31a65b4cab116389e4d2c))
+
+
+### Bug Fixes
+
+* Improve release workflow ([f443f90](https://github.com/NEIAAC/e-neiler/commit/f443f901078e2373d6ced7f3dff234b864886a87))
+* Remove broken function calls ([b3798aa](https://github.com/NEIAAC/e-neiler/commit/b3798aa65c4157f081562928d87114ffd4af847b))
+* Update build flags ([e6cbd68](https://github.com/NEIAAC/e-neiler/commit/e6cbd68c4a64a9a92d87729dece5b8cb855b4b1f))
+* Update build version case ([3b884a5](https://github.com/NEIAAC/e-neiler/commit/3b884a5906624ebc842055fee11235165153a97a))
+
+
+### Documentation
+
+* Fix typo ([ec223df](https://github.com/NEIAAC/e-neiler/commit/ec223df11cf9ce4d3d9c4e93b6a8ddefa170e248))
+
 ## [3.5.0](https://github.com/NEIAAC/e-neiler/compare/v3.4.2...v3.5.0) (2025-05-23)
 
 
