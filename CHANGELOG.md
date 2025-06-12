@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.2](https://github.com/NEIAAC/e-neiler/compare/v3.5.1...v3.5.2) (2025-06-12)
+
+
+### Bug Fixes
+
+* Remove broken smooth scroll area ([ee57e3d](https://github.com/NEIAAC/e-neiler/commit/ee57e3dcfafa068a256208433fe5678d0726c3d2))
+
 ## [3.5.1](https://github.com/NEIAAC/e-neiler/compare/v3.5.0...v3.5.1) (2025-05-23)
 
 
