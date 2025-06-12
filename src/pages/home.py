@@ -13,6 +13,7 @@ from qfluentwidgets import (
     BodyLabel,
     PrimaryToolButton,
     FluentIcon,
+    SmoothMode,
     SingleDirectionScrollArea,
     TextBrowser,
     InfoBar,
@@ -298,6 +299,7 @@ class HomePage(QWidget):
         )
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.enableTransparentBackground()
+        self.scrollArea.setSmoothMode(SmoothMode.NO_SMOOTH)
 
         self.mainLayout = QVBoxLayout()
         self.mainLayout.addWidget(self.scrollArea)
