@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.4](https://github.com/NEIAAC/e-neiler/compare/v3.5.3...v3.5.4) (2025-06-17)
+
+
+### Bug Fixes
+
+* Improve row number tracking ([f5de338](https://github.com/NEIAAC/e-neiler/commit/f5de338691aa0cad02575c6ee31e9d6552eec38d))
+
 ## [3.5.3](https://github.com/NEIAAC/e-neiler/compare/v3.5.2...v3.5.3) (2025-06-17)
 
 
