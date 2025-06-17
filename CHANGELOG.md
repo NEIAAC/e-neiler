@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.3](https://github.com/NEIAAC/e-neiler/compare/v3.5.2...v3.5.3) (2025-06-17)
+
+
+### Bug Fixes
+
+* Improve error handling for empty headers in excel files ([fab837a](https://github.com/NEIAAC/e-neiler/commit/fab837a1aeff7424c922e37fbd08529556c92386))
+
 ## [3.5.2](https://github.com/NEIAAC/e-neiler/compare/v3.5.1...v3.5.2) (2025-06-12)
 
 
