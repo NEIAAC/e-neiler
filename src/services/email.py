@@ -172,13 +172,19 @@ class EmailerThread(QThread):
                     Template(value).substitute(rows[0])
                 except KeyError as e:
                     self.output(
-                        f"{key} variable not found in table headers: {e}",
+                        f"A variable interpolation key used in '{key}' was not found in the table headers: {e}",
                         "ERROR",
                     )
                     return
                 except TypeError as e:
                     self.output(
-                        f"{key} variable found more than once in table headers: {e}",
+                        f"A variable interpolation key used in '{key}' was found more than once in table headers: {e}",
+                        "ERROR",
+                    )
+                    return
+                except ValueError as e:
+                    self.output(
+                        f"A variable interpolation key used in '{key}' is empty or invalid, make sure you avoid special characters in the variable name: {e}",
                         "ERROR",
                     )
                     return
@@ -199,12 +205,13 @@ class EmailerThread(QThread):
             successful = 0
             for row in rows:
                 total += 1
+                row_number = total + 1  # Exclude header row
 
                 message = EmailMessage()
 
                 if not row[cols[0]] or "@" not in row[cols[0]]:
                     self.output(
-                        f"[{total}] Email address column is empty or the value is invalid on this row",
+                        f"[{row_number}] Email address column is empty or the value is invalid on this row, you should either fix it or delete it",
                         "ERROR",
                     )
                     continue
@@ -252,7 +259,7 @@ class EmailerThread(QThread):
                         )
                 except Exception as e:
                     self.output(
-                        f"[{total}] Failed to attach file in email to {row[cols[0]]}: {e}",
+                        f"[{row_number}] Failed to attach file in email to {row[cols[0]]}: {e}",
                         "ERROR",
                     )
                     continue
@@ -262,7 +269,7 @@ class EmailerThread(QThread):
                     server.send_message(message)
                     successful += 1
                     self.output(
-                        f"[{total}] Sent email to {row[cols[0]]} with {len(filePaths)} {len(filePaths) == 1 and 'attachment' or 'attachments'}"
+                        f"[{row_number}] Sent email to {row[cols[0]]} with {len(filePaths)} {len(filePaths) == 1 and 'attachment' or 'attachments'}"
                     )
                     self.output(
                         f"Waiting {self.smtpDelay} seconds before sending the next email to avoid server rate limits..."
@@ -271,7 +278,7 @@ class EmailerThread(QThread):
 
                 except Exception as e:
                     self.output(
-                        f"[{total}] Failed to send email to {row[cols[0]]}: {e}",
+                        f"[{row_number}] Failed to send email to {row[cols[0]]}: {e}",
                         "ERROR",
                     )
 

@@ -25,7 +25,6 @@ from app import App
 from services.email import EmailerThread
 from utils.data_saver import config
 from utils import file_loader
-from utils.system_tray import SystemTray
 
 
 class HomePage(QWidget):
@@ -372,13 +371,13 @@ class HomePage(QWidget):
         def finished():
             self.runButton.setDisabled(False)
             App.alert(self, 0)
-            if (
-                App.applicationState()
-                == Qt.ApplicationState.ApplicationInactive
-            ):
-                SystemTray().send(
-                    "Emails sent!", "Go back to the app to see the logs."
-                )
+            # if (
+            #     App.applicationState()
+            #     == Qt.ApplicationState.ApplicationInactive
+            # ):
+            #     SystemTray().send(
+            #         "Emails sent!", "Go back to the app to see the logs."
+            #     )
             self.finishSound.play()
 
         self.worker.finished.connect(finished)
