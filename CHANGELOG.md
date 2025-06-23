@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.5](https://github.com/NEIAAC/e-neiler/compare/v3.5.4...v3.5.5) (2025-06-23)
+
+
+### Bug Fixes
+
+* Remove user sensitive info that gets locally logged ([719cc87](https://github.com/NEIAAC/e-neiler/commit/719cc87afed34b6242268f4c25c076f7d4b06b81))
+
 ## [3.5.4](https://github.com/NEIAAC/e-neiler/compare/v3.5.3...v3.5.4) (2025-06-17)
 
 
