@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.5.6](https://github.com/NEIAAC/e-neiler/compare/v3.5.5...v3.5.6) (2025-06-24)
+
+
+### Bug Fixes
+
+* Switch attachment splliter char to improve CSV compatibility ([92b300b](https://github.com/NEIAAC/e-neiler/commit/92b300b3c233f8a5bc406ae5f3b294a4a079cb0e))
+
+
+### Documentation
+
+* Update example to match new splitter char ([4fb7188](https://github.com/NEIAAC/e-neiler/commit/4fb71883a6401482b383a9a1d32672a7163f8735))
+
 ## [3.5.5](https://github.com/NEIAAC/e-neiler/compare/v3.5.4...v3.5.5) (2025-06-23)
 
 
