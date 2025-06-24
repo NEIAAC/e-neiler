@@ -246,7 +246,7 @@ class EmailerThread(QThread):
                 filePaths: list[str] = []
                 try:
                     if len(cols) > 1 and row[cols[1]]:
-                        attachmentNames = row[cols[1]].split(",")
+                        attachmentNames = row[cols[1]].split("#")
                         for attachmentName in attachmentNames:
                             fullPath = os.path.join(
                                 self.attachmentPath, attachmentName
