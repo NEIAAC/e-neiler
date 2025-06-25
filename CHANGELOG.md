@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.7](https://github.com/NEIAAC/e-neiler/compare/v3.5.6...v3.5.7) (2025-06-25)
+
+
+### Bug Fixes
+
+* Remove smoothMode block ([095448b](https://github.com/NEIAAC/e-neiler/commit/095448b59b62e3c8f1316fca05614cbb85a2cab3))
+
 ## [3.5.6](https://github.com/NEIAAC/e-neiler/compare/v3.5.5...v3.5.6) (2025-06-24)
 
 
