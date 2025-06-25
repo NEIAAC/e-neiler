@@ -292,6 +292,6 @@ class EmailerThread(QThread):
             self.output(f"Successfully sent {successful} out of {total} emails")
         except Exception as error:
             self.output(
-                f"An unexpected error occurred: {f'{error}'.split(';')[0][9:]}",
+                f"An unexpected error occurred: {error}",
                 LogLevel.ERROR,
             )
