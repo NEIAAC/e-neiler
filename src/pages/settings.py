@@ -8,7 +8,6 @@ from qfluentwidgets import (
     FluentIcon,
     FlowLayout,
     SingleDirectionScrollArea,
-    SmoothMode,
     Dialog,
 )
 
@@ -83,7 +82,6 @@ class SettingsPage(QWidget):
         self.scrollArea.horizontalScrollBar().setVisible(False)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.enableTransparentBackground()
-        self.scrollArea.setSmoothMode(SmoothMode.NO_SMOOTH)
 
         self.mainLayout = QVBoxLayout()
         self.mainLayout.addWidget(self.scrollArea)
