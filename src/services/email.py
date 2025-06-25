@@ -93,7 +93,7 @@ class EmailerThread(QThread):
             if not headers:
                 raise ValueError("Excel file has no headers")
             records = []
-            for row in sheet.iter_rows(min_row=2, values_only=True):  # type: ignore
+            for row in sheet.iter_rows(min_row=2, values_only=True):
                 logger.debug(f"Row data: {row}")
                 record = {
                     headers[i]: (value if value else "")
