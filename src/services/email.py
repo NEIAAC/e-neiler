@@ -9,7 +9,7 @@ from csv import DictReader, __version__ as csv_version
 from openpyxl import load_workbook, __version__ as openpyxl_version
 import html2text
 
-from utils.logger import logger
+from utils.logger import LogLevel, logger
 
 
 class EmailerThread(QThread):
@@ -46,9 +46,9 @@ class EmailerThread(QThread):
         self.tablePath = tablePath
         self.attachmentPath = attachmentPath
 
-    def output(self, text: str, level: str = "INFO"):
-        logger.log(level, text)
-        self.outputSignal.emit(text, level)
+    def output(self, text: str, level: LogLevel = LogLevel.INFO):
+        logger.log(level.value, text)
+        self.outputSignal.emit(text, level.value)
 
     def readBody(self) -> Template:
         with open(self.bodyPath, "r", encoding="utf-8") as bodyFile:
@@ -119,25 +119,27 @@ class EmailerThread(QThread):
         return content, mainType, subType
 
     def run(self):
-        inputs = self.__dict__.copy()
-        inputs.pop("smtpUsername", False)
-        inputs.pop("smtpPassword", False)
+        try:
+            inputs = self.__dict__.copy()
+            inputs.pop("smtpUsername", False)
+            inputs.pop("smtpPassword", False)
 
-        logger.info(f"Starting emailer thread with input parameters: {inputs}")
+            logger.info(
+                f"Starting emailer thread with input parameters: {inputs}"
+            )
 
-        self.output("...")
-        with logger.catch():
+            self.output("...")
             if not os.path.isdir(self.attachmentPath):
                 self.output(
                     f"Attachment directory {self.attachmentPath} not found or is not a directory",
-                    "ERROR",
+                    LogLevel.ERROR,
                 )
                 return
 
             try:
                 body = self.readBody()
             except Exception as e:
-                self.output(f"Failed to load body: {e}", "ERROR")
+                self.output(f"Failed to load body: {e}", LogLevel.ERROR)
                 return
             logger.info(f"Body loaded: {body.template}")
             logger.info(f"Body read: {body.template}")
@@ -145,7 +147,7 @@ class EmailerThread(QThread):
             try:
                 rows, cols = self.readTable()
             except Exception as e:
-                self.output(f"Failed to load table: {e}", "ERROR")
+                self.output(f"Failed to load table: {e}", LogLevel.ERROR)
                 return
             logger.info(
                 f"Table loaded, found {len(rows)} {len(rows) == 1 and 'row' or 'rows'}"
@@ -154,12 +156,12 @@ class EmailerThread(QThread):
             logger.info(f"Table rows read: {rows}")
 
             if not rows or not cols:
-                self.output("Given table is empty", "ERROR")
+                self.output("Given table is empty", LogLevel.ERROR)
                 return
             if len(rows) < 1:
                 self.output(
                     "Given table must have at least another row in addition to the headers!",
-                    "ERROR",
+                    LogLevel.ERROR,
                 )
                 return
 
@@ -176,19 +178,19 @@ class EmailerThread(QThread):
                 except KeyError as e:
                     self.output(
                         f"A variable interpolation key used in '{key}' was not found in the table headers: {e}",
-                        "ERROR",
+                        LogLevel.ERROR,
                     )
                     return
                 except TypeError as e:
                     self.output(
                         f"A variable interpolation key used in '{key}' was found more than once in table headers: {e}",
-                        "ERROR",
+                        LogLevel.ERROR,
                     )
                     return
                 except ValueError as e:
                     self.output(
                         f"A variable interpolation key used in '{key}' is empty or invalid, make sure you avoid special characters in the variable name: {e}",
-                        "ERROR",
+                        LogLevel.ERROR,
                     )
                     return
 
@@ -201,7 +203,7 @@ class EmailerThread(QThread):
                     f"Logged in as {self.smtpUsername} on {self.smtpHost}:{self.smtpPort}"
                 )
             except Exception as e:
-                self.output(f"Failed to login: {e}", "ERROR")
+                self.output(f"Failed to login: {e}", LogLevel.ERROR)
                 return
 
             total = 0
@@ -215,7 +217,7 @@ class EmailerThread(QThread):
                 if not row[cols[0]] or "@" not in row[cols[0]]:
                     self.output(
                         f"[{row_number}] Email address column is empty or the value is invalid on this row, you should either fix it or delete it",
-                        "ERROR",
+                        LogLevel.WARNING,
                     )
                     continue
 
@@ -263,7 +265,7 @@ class EmailerThread(QThread):
                 except Exception as e:
                     self.output(
                         f"[{row_number}] Failed to attach file in email to {row[cols[0]]}: {e}",
-                        "ERROR",
+                        LogLevel.ERROR,
                     )
                     continue
 
@@ -282,9 +284,14 @@ class EmailerThread(QThread):
                 except Exception as e:
                     self.output(
                         f"[{row_number}] Failed to send email to {row[cols[0]]}: {e}",
-                        "ERROR",
+                        LogLevel.ERROR,
                     )
 
             server.quit()
 
             self.output(f"Successfully sent {successful} out of {total} emails")
+        except Exception as error:
+            self.output(
+                f"An unexpected error occurred: {f'{error}'.split(';')[0][9:]}",
+                LogLevel.ERROR,
+            )

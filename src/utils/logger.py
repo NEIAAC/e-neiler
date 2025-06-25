@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 import os
 import sys
 
@@ -9,6 +10,17 @@ from config.metadata import DATA_PATH
 
 LOGS_PATH = os.path.join(DATA_PATH, "logs")
 
+
+class LogLevel(Enum):
+    TRACE = "TRACE"
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    SUCCESS = "SUCCESS"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+
+
 formatter = (
     "[{time:YYYY-MM-DDTHH:mm:ss.SSS[Z]!UTC}] [<level>{level}</level>] {message}"
 )
@@ -16,11 +28,15 @@ formatter = (
 dev = "__compiled__" not in globals()
 
 logger.remove()
-logger.level("INFO", color="<green>")
+logger.level(LogLevel.INFO.value, color="<green>")
 
 if dev:
     logger.add(
-        sys.stdout, colorize=True, format=formatter, level="DEBUG", enqueue=True
+        sys.stdout,
+        colorize=True,
+        format=formatter,
+        level=LogLevel.DEBUG.value,
+        enqueue=True,
     )
 
 logger.add(
@@ -29,7 +45,7 @@ logger.add(
     rotation=datetime.time(0, 0, 0, tzinfo=datetime.timezone.utc),
     retention="30 days",
     enqueue=True,
-    level="DEBUG" if dev else "INFO",
+    level=LogLevel.DEBUG.value if dev else LogLevel.INFO.value,
 )
 
 

@@ -13,13 +13,3 @@ class SystemTray(QSystemTrayIcon):
 
         self.setIcon(QIcon(QPixmap(file_loader.loadResource(LOGO_PATH))))
         self.setVisible(visible)
-
-    def send(self, title: str, body: str, messageClicked: callable = None):  # type: ignore
-        """Allows sending tray messages without showing an icon in the system tray."""
-        self.messageClicked.connect(messageClicked)
-        visible = self.isVisible()
-        if not visible:
-            self.setVisible(True)
-        self.showMessage(title, body)
-        if not visible:
-            self.setVisible(False)
