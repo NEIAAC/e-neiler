@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.6.0](https://github.com/NEIAAC/e-neiler/compare/v3.5.7...v3.6.0) (2025-06-25)
+
+
+### Features
+
+* Match template best practices ([506970b](https://github.com/NEIAAC/e-neiler/commit/506970ba6d5ee454a2e13b913ef19d6145b12291))
+
+
+### Bug Fixes
+
+* Improve error messages ([9c1b38e](https://github.com/NEIAAC/e-neiler/commit/9c1b38e7e2c230e3b5fa98a79319791a83cadf16))
+* Lock builder os versions ([86906d2](https://github.com/NEIAAC/e-neiler/commit/86906d2f54935f3514e061b7548acd16bd3ff9ee))
+
+
+### Documentation
+
+* Update error instructions ([796c22e](https://github.com/NEIAAC/e-neiler/commit/796c22e5b4ee0074dea4a6532891b11cba355865))
+
 ## [3.5.7](https://github.com/NEIAAC/e-neiler/compare/v3.5.6...v3.5.7) (2025-06-25)
 
 
