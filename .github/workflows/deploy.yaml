@@ -58,7 +58,7 @@ jobs:
         run: pip install .[build]
 
       - name: Build artifact
-        uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
+        uses: Nuitka/Nuitka-Action@5752d14b8c7a6d6580896f6c593692cb2bf8e50d # v1.3.0
         with:
           nuitka-version: ${{ needs.prepare.outputs.nuitka }}
           script-name: src/main.py
@@ -105,7 +105,7 @@ jobs:
         run: pip install .[build]
 
       - name: Build artifact
-        uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
+        uses: Nuitka/Nuitka-Action@5752d14b8c7a6d6580896f6c593692cb2bf8e50d # v1.3.0
         with:
           nuitka-version: ${{ needs.prepare.outputs.nuitka }}
           script-name: src/main.py
@@ -151,7 +151,7 @@ jobs:
         run: pip install .[build]
 
       - name: Build binaries
-        uses: Nuitka/Nuitka-Action@8462c393e3dfa2bea614d9f448f989c88ad9f9e4 # v1.3.0
+        uses: Nuitka/Nuitka-Action@5752d14b8c7a6d6580896f6c593692cb2bf8e50d # v1.3.0
         with:
           nuitka-version: ${{ needs.prepare.outputs.nuitka }}
           script-name: src/main.py
