@@ -25,17 +25,17 @@ formatter = (
     "[{time:YYYY-MM-DDTHH:mm:ss.SSS[Z]!UTC}] [<level>{level}</level>] {message}"
 )
 
-dev = "__compiled__" not in globals()
+trace = "__compiled__" not in globals() or "--debug" in sys.argv[1:]
 
 logger.remove()
 logger.level(LogLevel.INFO.value, color="<green>")
 
-if dev:
+if trace:
     logger.add(
         sys.stdout,
         colorize=True,
         format=formatter,
-        level=LogLevel.DEBUG.value,
+        level=LogLevel.TRACE.value,
         enqueue=True,
     )
 
@@ -45,7 +45,7 @@ logger.add(
     rotation=datetime.time(0, 0, 0, tzinfo=datetime.timezone.utc),
     retention="30 days",
     enqueue=True,
-    level=LogLevel.DEBUG.value if dev else LogLevel.INFO.value,
+    level=LogLevel.TRACE.value if trace else LogLevel.INFO.value,
 )
 
 
@@ -53,8 +53,10 @@ def qMessageHandler(
     mode: QtCore.QtMsgType, _: QtCore.QMessageLogContext, message: str
 ):
     match mode:
+        case QtCore.QtMsgType.QtDebugMsg:
+            logger.debug(message)
         case QtCore.QtMsgType.QtInfoMsg:
-            logger.info(message)
+            logger.debug(message)
         case QtCore.QtMsgType.QtWarningMsg:
             logger.warning(message)
         case QtCore.QtMsgType.QtCriticalMsg:
@@ -62,4 +64,4 @@ def qMessageHandler(
         case QtCore.QtMsgType.QtFatalMsg:
             logger.critical(message)
         case _:
-            logger.debug(message)
+            logger.trace(message)

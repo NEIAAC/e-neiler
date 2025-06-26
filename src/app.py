@@ -22,7 +22,6 @@ class App(QApplication):
         self.setOrganizationName(AUTHOR_NAME)
         self.setOrganizationDomain(AUTHOR_DOMAIN)
         self.setApplicationVersion(__version__)
-        self.setWindowIcon(QIcon(QPixmap(file_loader.loadResource(LOGO_PATH))))
 
         data = [
             self.applicationName(),
@@ -43,3 +42,7 @@ class App(QApplication):
             )
         logger.info(column)
         logger.info(row)
+
+        self.setWindowIcon(
+            QIcon(QPixmap(file_loader.getResourcePath(LOGO_PATH)))
+        )

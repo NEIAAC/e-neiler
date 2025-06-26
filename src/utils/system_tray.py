@@ -11,5 +11,5 @@ class SystemTray(QSystemTrayIcon):
     def __init__(self, visible: bool = False):
         super().__init__()
 
-        self.setIcon(QIcon(QPixmap(file_loader.loadResource(LOGO_PATH))))
+        self.setIcon(QIcon(QPixmap(file_loader.getResourcePath(LOGO_PATH))))
         self.setVisible(visible)

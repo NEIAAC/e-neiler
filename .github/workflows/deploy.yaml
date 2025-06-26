@@ -64,7 +64,7 @@ jobs:
           script-name: src/main.py
           mode: app
           include-data-dir: src/resources=resources
-          macos-app-icon: src/resources/icons/logo.png
+          macos-app-icon: src/resources/images/logo.png
           macos-signed-app-name: ${{ needs.prepare.outputs.signature }}
           macos-app-name: ${{ needs.prepare.outputs.name }}
           macos-app-version: ${{ needs.prepare.outputs.version }}
@@ -75,6 +75,7 @@ jobs:
           file-description: ${{ needs.prepare.outputs.name }} app, created by ${{ needs.prepare.outputs.author }}.
           output-dir: build
           enable-plugins: pyside6
+          include-qt-plugins: sensible,multimedia
 
       - name: Rename build
         working-directory: build
@@ -110,16 +111,17 @@ jobs:
           script-name: src/main.py
           mode: app
           include-data-dir: src/resources=resources
-          linux-icon: src/resources/icons/logo.png
+          linux-icon: src/resources/images/logo.png
           product-version: ${{ needs.prepare.outputs.version }}
           file-version: ${{ needs.prepare.outputs.version }}
           company-name: ${{ needs.prepare.outputs.author }}
           product-name: ${{ needs.prepare.outputs.name }}
           file-description: ${{ needs.prepare.outputs.name }} app, created by ${{ needs.prepare.outputs.author }}.
           output-dir: build
-          enable-plugins: pyside6
           clang: true
           static-libpython: yes
+          enable-plugins: pyside6
+          include-qt-plugins: sensible,multimedia
 
       - name: Rename build
         working-directory: build
@@ -155,7 +157,7 @@ jobs:
           script-name: src/main.py
           mode: app
           include-data-dir: src/resources=resources
-          windows-icon-from-ico: src/resources/icons/logo.png
+          windows-icon-from-ico: src/resources/images/logo.png
           windows-console-mode: disable
           product-version: ${{ needs.prepare.outputs.version }}
           file-version: ${{ needs.prepare.outputs.version }}
@@ -164,6 +166,7 @@ jobs:
           file-description: ${{ needs.prepare.outputs.name }} app, created by ${{ needs.prepare.outputs.author }}.
           output-dir: build
           enable-plugins: pyside6
+          include-qt-plugins: sensible,multimedia
 
       - name: Rename build
         working-directory: build

@@ -27,7 +27,7 @@ def testAppMeta(qapp: App):
     assert qapp.organizationDomain() == AUTHOR_DOMAIN
     assert (
         qapp.windowIcon().pixmap(16, 16).toImage()
-        == QIcon(QPixmap(file_loader.loadResource(LOGO_PATH)))
+        == QIcon(QPixmap(file_loader.getResourcePath(LOGO_PATH)))
         .pixmap(16, 16)
         .toImage()
     )

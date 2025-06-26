@@ -1,3 +1,4 @@
+import os
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -37,7 +38,11 @@ class HomePage(QWidget):
 
         self.finishSound = QSoundEffect()
         self.finishSound.setSource(
-            QUrl.fromLocalFile(file_loader.loadResource("sounds/success.wav"))
+            QUrl.fromLocalFile(
+                file_loader.getResourcePath(
+                    os.path.join("sounds", "success.wav")
+                )
+            )
         )
         self.finishSound.setVolume(0.1)
 
