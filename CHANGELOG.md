@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/NEIAAC/e-neiler/compare/v3.6.0...v3.7.0) (2025-06-26)
+
+
+### Features
+
+* Add debug flag ([56a7b29](https://github.com/NEIAAC/e-neiler/commit/56a7b29fddc687751a6c4553203474458b1f0c3f))
+
 ## [3.6.0](https://github.com/NEIAAC/e-neiler/compare/v3.5.7...v3.6.0) (2025-06-25)
 
 
