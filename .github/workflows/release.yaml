@@ -22,7 +22,7 @@ jobs:
     outputs:
       desktop: ${{ steps.metadata.outputs.release_created }}
     steps:
-      - uses: googleapis/release-please-action@1155c2c8dcbd6b15e85bae6bc6d1fed9552663cb # v4.2.0
+      - uses: googleapis/release-please-action@3612a99d75bd7a010bb03d6e2ee3e2392b7392fb # v4.2.0
         id: metadata
         with:
           config-file: release.json
